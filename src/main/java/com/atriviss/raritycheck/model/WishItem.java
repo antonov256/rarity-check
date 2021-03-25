@@ -1,7 +1,10 @@
 package com.atriviss.raritycheck.model;
 
+import lombok.Getter;
+
 import java.util.Date;
 
+@Getter
 public class WishItem {
     private final int id;
     private final Item item;
