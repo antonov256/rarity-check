@@ -16,14 +16,14 @@ public class MockServicesConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public OwnItemService getOwnItemService() {
-        return new MockOwnItemService();
+    public OwnItemService getOwnItemService(ItemService itemService) {
+        return new MockOwnItemService(itemService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public WishItemService getWishItemService() {
-        return new MockWishItemService();
+    public WishItemService getWishItemService(ItemService itemService) {
+        return new MockWishItemService(itemService);
     }
 
     @Bean
