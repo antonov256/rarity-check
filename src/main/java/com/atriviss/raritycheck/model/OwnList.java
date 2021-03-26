@@ -2,11 +2,16 @@ package com.atriviss.raritycheck.model;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class OwnList {
     private final List<OwnItem> items;
+
+    public OwnList() {
+        this.items = new ArrayList<>();
+    }
 
     public OwnList(List<OwnItem> items) {
         this.items = items;

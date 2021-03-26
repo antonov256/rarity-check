@@ -20,10 +20,10 @@ public class PortfolioApiDtoConverter implements Converter<Portfolio, PortfolioA
     @Override
     public PortfolioApiDto convert(Portfolio source) {
         PortfolioApiDto target = new PortfolioApiDto(
+                source.getPortfolioDescription(),
                 ownListApiDtoConverter.convert(source.getOwnList()),
                 wishListApiDtoConverter.convert(source.getWishList())
         );
-
         return target;
     }
 }
