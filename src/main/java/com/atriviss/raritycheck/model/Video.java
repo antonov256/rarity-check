@@ -1,7 +1,19 @@
 package com.atriviss.raritycheck.model;
 
 public class Video {
+    private final Long id;
+    private final Integer itemId;
+    private final String bucketName;
+    private final String key;
+
+    public Video(Long id, Integer itemId, String bucketName, String key) {
+        this.id = id;
+        this.itemId = itemId;
+        this.bucketName = bucketName;
+        this.key = key;
+    }
+
     public String url() {
-        return "video_url";
+        return "https://" + bucketName + ".s3.amazonaws.com/" + key;
     }
 }
