@@ -2,24 +2,15 @@ package com.atriviss.raritycheck.model;
 
 import lombok.Getter;
 
-import java.util.Optional;
-
 @Getter
 public class Classification {
+    public static Classification NO_CLASSIFICATION = new Classification(Category.NO_CATEGORY, Subcategory.NO_SUBCATEGORY);
+
     private final Category category;
-    private final Optional<Subcategory> subcategory;
+    private final Subcategory subcategory;
 
-    public Classification(Category category) {
+    public Classification(Category category, Subcategory subcategory) {
         this.category = category;
-        subcategory = Optional.empty();
-    }
-
-    public Classification(Subcategory subcategory) {
-        this.category = subcategory.getCategory();
-        this.subcategory = Optional.of(subcategory);
-    }
-
-    public boolean subcategoryPresented() {
-        return subcategory.isPresent();
+        this.subcategory = subcategory;
     }
 }

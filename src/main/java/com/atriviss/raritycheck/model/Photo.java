@@ -16,7 +16,7 @@ public class Photo {
         this.key = key;
     }
 
-    public String url() {
+    public String getUrl() {
         return "https://" + bucketName + ".s3.amazonaws.com/" + key;
     }
 }

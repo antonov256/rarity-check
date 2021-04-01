@@ -4,13 +4,15 @@ import lombok.Getter;
 
 @Getter
 public class Subcategory {
-    private final Integer id;
-    private final String name;
-    private final Category category;
+    public static final Subcategory NO_SUBCATEGORY = new Subcategory(0, Category.NO_CATEGORY.getId(),"no subcategory");
 
-    public Subcategory(Integer id, String name, Category category) {
+    private final Integer id;
+    private final Integer categoryId;
+    private final String name;
+
+    public Subcategory(Integer id, Integer categoryId, String name) {
         this.id = id;
+        this.categoryId = categoryId;
         this.name = name;
-        this.category = category;
     }
 }

@@ -1,5 +1,8 @@
 package com.atriviss.raritycheck.model;
 
+import lombok.Getter;
+
+@Getter
 public class Video {
     private final Long id;
     private final Integer itemId;
@@ -13,7 +16,7 @@ public class Video {
         this.key = key;
     }
 
-    public String url() {
+    public String getUrl() {
         return "https://" + bucketName + ".s3.amazonaws.com/" + key;
     }
 }

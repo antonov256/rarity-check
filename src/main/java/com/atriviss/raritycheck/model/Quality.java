@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class Quality {
-    private final int value;
+    private final Integer value;
 
-    public Quality(int value) {
+    public Quality(Integer value) {
         this.value = value;
     }
 }
