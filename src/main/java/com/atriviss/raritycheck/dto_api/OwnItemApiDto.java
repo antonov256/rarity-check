@@ -2,17 +2,15 @@ package com.atriviss.raritycheck.dto_api;
 
 import lombok.Getter;
 
-import java.util.Date;
-
 @Getter
 public class OwnItemApiDto {
-    private final int id;
+    private final Integer id;
+    private final Integer userId;
     private final ItemApiDto item;
-    private final Date addDate;
 
-    public OwnItemApiDto(int id, ItemApiDto item, Date addDate) {
+    public OwnItemApiDto(Integer id, Integer userId, ItemApiDto item) {
         this.id = id;
+        this.userId = userId;
         this.item = item;
-        this.addDate = addDate;
     }
 }

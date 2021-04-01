@@ -14,10 +14,10 @@ public class UserInfoApiDto {
     private final String email;
     private final String timeZone;
 
-    private final int ownListSize;
-    private final int wishListSize;
+    private final Integer ownListSize;
+    private final Integer wishListSize;
 
-    public UserInfoApiDto(Integer id, String username, String name, String surname, String email, String timeZone, int ownListSize, int wishListSize) {
+    public UserInfoApiDto(Integer id, String username, String name, String surname, String email, String timeZone, Integer ownListSize, Integer wishListSize) {
         this.id = id;
         this.username = username;
         this.name = name;
