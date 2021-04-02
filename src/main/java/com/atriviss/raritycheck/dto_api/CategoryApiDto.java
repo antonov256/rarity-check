@@ -1,11 +1,15 @@
 package com.atriviss.raritycheck.dto_api;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class CategoryApiDto {
-    private final Integer id;
-    private final String name;
+    private Integer id;
+    private String name;
 
     public CategoryApiDto(Integer id, String name) {
         this.id = id;
