@@ -12,5 +12,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/profile").authenticated()
                 .antMatchers("/**").permitAll();
+
+        http
+                .cors()
+                .and()
+                .csrf()
+                .disable();
     }
 }
