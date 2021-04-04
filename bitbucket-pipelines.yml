@@ -1,0 +1,47 @@
+#  Template Java Gradle build
+
+#  This template allows you to test and build your Java project with Gradle.
+#  The workflow allows running tests, code checkstyle and security scans on the default branch.
+
+# Prerequisites: appropriate project structure should exist in the repository.
+
+image: gradle:6.6.0
+
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: Build and Test
+          caches:
+            - gradle
+          script:
+            - gradle build
+          after-script:
+            - pipe: atlassian/checkstyle-report:0.2.0
+      - step:
+          name: Deploy to staging
+          deployment: staging
+          script:
+            - pipe: atlassian/aws-elasticbeanstalk-deploy:0.7.0
+              variables:
+                  AWS_ACCESS_KEY_ID: '<string>' # Optional if already defined in the context.
+                  AWS_SECRET_ACCESS_KEY: '<string>' # Optional if already defined in the context.
+                  AWS_DEFAULT_REGION: "eu-central-1" # Optional if already defined in the context.
+                  AWS_OIDC_ROLE_ARN: "<string>" # Optional by default. Required for OpenID Connect (OIDC) authentication.
+                  APPLICATION_NAME: '<string>'
+                  ENVIRONMENT_NAME: '<string>'
+                  ZIP_FILE: '<string>'
+                  # S3_BUCKET: '<string>' # Optional.
+                  # VERSION_LABEL: '<string>' # Optional.
+                  # DESCRIPTION: '<string>' # Optional.
+                  # WAIT: '<boolean>' # Optional.
+                  # WAIT_INTERVAL: '<integer>' # Optional.
+                  # WARMUP_INTERVAL: '<integer>' # Optional.
+                  # COMMAND: '<string>' # Optional.
+                  # DEBUG: '<boolean>' # Optional.
+      - step:
+          name: Deploy to prod
+          deployment: production
+          trigger: manual
+          script:
+            - echo "This step runs once you click the 'Run' button"
