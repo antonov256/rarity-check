@@ -16,6 +16,8 @@ pipelines:
             - gradle
           script:
             - gradle build
+          artifacts: 
+            - 'raritycheck.jar'
       - step:
           name: Deploy to staging
           deployment: staging
@@ -27,7 +29,8 @@ pipelines:
                 AWS_DEFAULT_REGION: "eu-central-1"
                 COMMAND: 'deploy-only'
                 ENVIRONMENT_NAME: "staging"
-                APPLICATION_NAME: "raritycheck.jar"
+                APPLICATION_NAME: "RarityCheck"
+                ZIP_FILE: "raritycheck.jar"
                 S3_BUCKET: 'elasticbeanstalk-eu-central-1-916378583184'
       - step:
           name: Deploy to prod
