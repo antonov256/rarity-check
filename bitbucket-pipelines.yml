@@ -18,10 +18,10 @@ pipelines:
     - parallel:
       - step:
           name: Build and Test
-          script:
-            - ./mvnw verify --file pom.xml
           caches:
-            - maven
+            - gradle
+          script:
+            - gradle build
           after-script:
             - pipe: atlassian/checkstyle-report:0.2.0
               variables:
