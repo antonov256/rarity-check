@@ -53,7 +53,7 @@ pipelines:
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: "eu-central-1"
                 COMMAND: 'deploy-only'
-                ENVIRONMENT_NAME: "staging"
+                ENVIRONMENT_NAME: "Raritycheck-env"
                 APPLICATION_NAME: "RarityCheck"
                 ZIP_FILE: "raritycheck.jar"
                 S3_BUCKET: 'elasticbeanstalk-eu-central-1-916378583184'
