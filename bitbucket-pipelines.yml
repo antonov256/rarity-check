@@ -24,21 +24,14 @@ pipelines:
           script:
             - pipe: atlassian/aws-elasticbeanstalk-deploy:0.7.0
               variables:
-                  AWS_ACCESS_KEY_ID: '<string>' # Optional if already defined in the context.
-                  AWS_SECRET_ACCESS_KEY: '<string>' # Optional if already defined in the context.
-                  AWS_DEFAULT_REGION: "eu-central-1" # Optional if already defined in the context.
-                  AWS_OIDC_ROLE_ARN: "<string>" # Optional by default. Required for OpenID Connect (OIDC) authentication.
-                  APPLICATION_NAME: '<string>'
-                  ENVIRONMENT_NAME: '<string>'
-                  ZIP_FILE: '<string>'
-                  # S3_BUCKET: '<string>' # Optional.
-                  # VERSION_LABEL: '<string>' # Optional.
-                  # DESCRIPTION: '<string>' # Optional.
-                  # WAIT: '<boolean>' # Optional.
-                  # WAIT_INTERVAL: '<integer>' # Optional.
-                  # WARMUP_INTERVAL: '<integer>' # Optional.
-                  # COMMAND: '<string>' # Optional.
-                  # DEBUG: '<boolean>' # Optional.
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 
+                APPLICATION_NAME: "RarityCheck"
+                COMMAND: 'deploy-only'
+                ENVIRONMENT_NAME: "Raritycheck-staging"
+                WAIT: 'true'
+                S3_BUCKET: 'elasticbeanstalk-eu-central-1-916378583184'
       - step:
           name: Deploy to prod
           deployment: production
