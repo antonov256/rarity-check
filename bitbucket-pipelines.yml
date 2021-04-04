@@ -22,6 +22,7 @@ pipelines:
             - echo %JAVA_HOME%
             - gradle --version
             - gradle build
+            - ls ./
           after-script:
             - pipe: atlassian/checkstyle-report:0.2.0
               variables:
