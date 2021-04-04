@@ -41,7 +41,10 @@ pipelines:
           caches:
             - gradle
           script:
+            - echo %JAVA_HOME%
+            - gradle --version
             - gradle build
+            - ls ./
           artifacts: 
             - 'raritycheck.jar'
       - step:
