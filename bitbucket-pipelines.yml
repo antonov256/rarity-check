@@ -21,7 +21,7 @@ pipelines:
           script:
             - echo %JAVA_HOME%
             - gradle --version
-            - gradle build
+            - gradlew clean build
           after-script:
             - pipe: atlassian/checkstyle-report:0.2.0
               variables:
@@ -40,7 +40,7 @@ pipelines:
           caches:
             - gradle
           script:
-            - gradle build
+            - gradlew clean build
           artifacts: 
             - 'raritycheck.jar'
       - step:
