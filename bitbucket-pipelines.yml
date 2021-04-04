@@ -9,9 +9,7 @@
 
 
 
-
-image: atlassian/default-image:2
-
+image: gradle:6.6.0
 
 pipelines:
   default:
