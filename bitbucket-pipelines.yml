@@ -9,7 +9,7 @@
 
 
 
-image: gradle:6.6.0
+image: gradle:6.7.0
 
 pipelines:
   default:
@@ -19,6 +19,8 @@ pipelines:
           caches:
             - gradle
           script:
+            - echo %JAVA_HOME%
+            - gradle --version
             - gradle build
           after-script:
             - pipe: atlassian/checkstyle-report:0.2.0
