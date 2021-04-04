@@ -45,7 +45,7 @@ pipelines:
             - 'raritycheck.jar'
       - step:
           name: Deploy to staging
-          deployment: staging
+          deployment: Raritycheck-env
           script:
             - pipe: atlassian/aws-elasticbeanstalk-deploy:0.7.0
               variables:
