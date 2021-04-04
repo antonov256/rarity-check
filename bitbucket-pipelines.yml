@@ -16,8 +16,6 @@ pipelines:
             - gradle
           script:
             - gradle build
-          after-script:
-            - pipe: atlassian/checkstyle-report:0.2.0
       - step:
           name: Deploy to staging
           deployment: staging
@@ -26,11 +24,11 @@ pipelines:
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-                AWS_DEFAULT_REGION: 
+                AWS_DEFAULT_REGION: "eu-central-1"
                 APPLICATION_NAME: "RarityCheck"
                 COMMAND: 'deploy-only'
                 ENVIRONMENT_NAME: "Raritycheck-staging"
-                WAIT: 'true'
+                APPLICATION_NAME: "raritycheck.jar"
                 S3_BUCKET: 'elasticbeanstalk-eu-central-1-916378583184'
       - step:
           name: Deploy to prod
