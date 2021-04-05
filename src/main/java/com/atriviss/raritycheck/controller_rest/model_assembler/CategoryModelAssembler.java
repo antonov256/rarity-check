@@ -12,9 +12,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class CategoryModelAssembler  implements RepresentationModelAssembler<CategoryApiDto, EntityModel<CategoryApiDto>> {
     @Override
-    public EntityModel<CategoryApiDto> toModel(CategoryApiDto categoryApiDto) {
-        return EntityModel.of(categoryApiDto,
-                linkTo(methodOn(CategoryRestController.class).one(categoryApiDto.getId())).withSelfRel(),
+    public EntityModel<CategoryApiDto> toModel(CategoryApiDto apiDto) {
+        return EntityModel.of(apiDto,
+                linkTo(methodOn(CategoryRestController.class).one(apiDto.getId())).withSelfRel(),
                 linkTo(methodOn(CategoryRestController.class).all()).withRel("categories"));
     }
 }

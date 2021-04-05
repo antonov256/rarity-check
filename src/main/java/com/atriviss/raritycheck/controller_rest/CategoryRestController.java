@@ -21,32 +21,33 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/api")
 public class CategoryRestController {
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService service;
 
     @Autowired
     private CategoryModelAssembler assembler;
 
+
     @GetMapping("/categories/{id}")
     public EntityModel<CategoryApiDto> one(@PathVariable Integer id) {
-        CategoryApiDto categoryApiDto = categoryService.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        CategoryApiDto apiDto = service.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
 
-        return assembler.toModel(categoryApiDto);
+        return assembler.toModel(apiDto);
     }
 
     @GetMapping("/categories")
     public CollectionModel<EntityModel<CategoryApiDto>> all() {
-        List<CategoryApiDto> categoryDtos = categoryService.findAll();
+        List<CategoryApiDto> apiDtoList = service.findAll();
 
-        List<EntityModel<CategoryApiDto>> entityModels = categoryDtos.stream()
+        List<EntityModel<CategoryApiDto>> entityModelList = apiDtoList.stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(entityModels, linkTo(methodOn(CategoryRestController.class).all()).withSelfRel());
+        return CollectionModel.of(entityModelList, linkTo(methodOn(CategoryRestController.class).all()).withSelfRel());
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<?> newCategory(@RequestBody CategoryApiDto newCategoryApiDto) {
-        EntityModel<CategoryApiDto> entityModel = assembler.toModel(categoryService.createCategory(newCategoryApiDto));
+    public ResponseEntity<?> create(@RequestBody CategoryApiDto apiDto) {
+        EntityModel<CategoryApiDto> entityModel = assembler.toModel(service.create(apiDto));
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -54,9 +55,9 @@ public class CategoryRestController {
     }
 
     @PutMapping("/categories/{id}")
-    public ResponseEntity<?> replaceCategory(@RequestBody CategoryApiDto newCategoryApiDto, @PathVariable Integer id) {
-        CategoryApiDto updatedCategory = categoryService.replaceCategory(id, newCategoryApiDto);
-        EntityModel<CategoryApiDto> entityModel = assembler.toModel(updatedCategory);
+    public ResponseEntity<?> replace(@RequestBody CategoryApiDto apiDto, @PathVariable Integer id) {
+        CategoryApiDto replacedApiDto = service.replaceCategory(id, apiDto);
+        EntityModel<CategoryApiDto> entityModel = assembler.toModel(replacedApiDto);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -65,8 +66,7 @@ public class CategoryRestController {
 
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
-        categoryService.deleteById(id);
-
+        service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
