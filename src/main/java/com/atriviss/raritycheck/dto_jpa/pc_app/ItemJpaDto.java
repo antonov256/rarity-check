@@ -53,6 +53,7 @@ public class ItemJpaDto {
     }
 
     @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "quality_value"))
     @Column(name = "quality_value", nullable = false)
     public QualityJpaDto getQuality() {
         return quality;

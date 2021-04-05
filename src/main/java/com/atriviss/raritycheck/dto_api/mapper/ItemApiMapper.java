@@ -8,6 +8,8 @@ import com.atriviss.raritycheck.model.Photo;
 import com.atriviss.raritycheck.model.Video;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(
         uses = {ClassificationApiMapper.class, PhotoApiMapper.class, VideoApiMapper.class},
         imports = {Photo.class, Video.class, PhotoApiDto.class, VideoApiDto.class}
@@ -16,4 +18,8 @@ public interface ItemApiMapper {
     Item toItem(ItemApiDto itemApiDto);
 
     ItemApiDto toItemApiDto(Item item);
+
+    List<Item> toItemList(List<ItemApiDto> itemApiDtos);
+
+    List<ItemApiDto> toItemApiDtoList(List<Item> items);
 }
