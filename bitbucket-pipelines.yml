@@ -44,8 +44,9 @@ pipelines:
             - echo %JAVA_HOME%
             - gradle --version
             - gradle build
-            - ./gradlew clean build
+            #- ./gradlew clean build
             - ls ./
+            - ls -l ./build/libs/
           artifacts: 
             - 'raritycheck.jar'
       - step:
