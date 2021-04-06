@@ -8,6 +8,8 @@ import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.*;
 import com.atriviss.raritycheck.model.Item;
 import com.atriviss.raritycheck.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +55,13 @@ public class ItemService {
     public Optional<ItemApiDto> findById(Integer id) {
         Optional<ItemJpaDto> optionalJpaDto = repository.findById(id);
         return optionalJpaDto.map(jpaDto -> apiMapper.toItemApiDto(jpaMapper.toItem(jpaDto)));
+    }
+
+    public Page<ItemApiDto> findAll(Pageable pageable) {
+        Page<ItemJpaDto> jpaDtoPage = repository.findAll(pageable);
+        Page<ItemApiDto> apiDtoPage = jpaDtoPage.map(jpaMapper::toItem).map(apiMapper::toItemApiDto);
+
+        return apiDtoPage;
     }
 
     public List<ItemApiDto> findAll() {
