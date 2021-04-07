@@ -1,0 +1,43 @@
+<div class="home">
+  <div class="home__welcome">
+    <div class="container">
+      <form class="home__search" ngNativeValidate>
+        <mat-form-field appearance="outline" class="home__search-field">
+          <mat-label>Search</mat-label>
+          <input
+            required
+            matInput
+            placeholder="Czechoslovakia Dukat 1933 Coin"
+          />
+          <button mat-icon-button matSuffix>
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="home__search-select">
+          <mat-label>All categories</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let cat of categories" [value]="cat.value">
+              {{ cat.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-flat-button class="home__search-submit" color="primary">
+          Search
+        </button>
+      </form>
+      <div class="home__categories">
+        <button
+          mat-flat-button
+          color="accent"
+          (click)="_categoriesService.open()"
+        >
+          <mat-icon>view_list</mat-icon>
+          Categories
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <app-paged-default-cards *ngFor="let section of sections" [title]="section.title" [items]="section.items"></app-paged-default-cards>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+.image-box{
+  width: 150px;
+  height: 150px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img{
+    margin: auto;
+    height: 100%;
+  }
+
+  & button{
+    position: absolute;
+
+    &.fav{
+      right: 0px;
+      top: 0px;
+
+      &.white{
+        color: #fff;
+      }
+    }
+
+    &.del{
+      left: 0px;
+      bottom: 0px;
+    }
+  }
+}

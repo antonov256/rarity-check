@@ -1,0 +1,39 @@
+.item-form{
+  width: 600px;
+  margin: 30px auto;
+
+  mat-form-field{
+    width: 100%;
+  }
+
+  &__button{
+    &_choose{
+      width: 100px;
+      margin-top: 3.5px;
+      height: 51px;
+    }
+  }
+
+  &__flex{
+    display: flex;
+
+    &_images{
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 10px;
+    }
+
+    &_select{
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    &_buttons{
+      justify-content: space-between;
+    }
+  }
+
+  &__images{
+    margin: 10px 0px;
+  }
+}
