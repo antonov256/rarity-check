@@ -18,8 +18,8 @@ export class HttpRequestsService {
     return this.request<T>(url, 'POST', null, data);
   }
 
-  patch<T>(url: string, data: any): Promise<T> {
-    return this.request(url, 'PATCH', null, data);
+  put<T>(url: string, data: any): Promise<T> {
+    return this.request(url, 'PUT', null, data);
   }
 
   delete<T>(url: string, data: any): Promise<T> {
@@ -30,7 +30,7 @@ export class HttpRequestsService {
   // TODO: fix request type
   private async request<T>(
     url: string,
-    method: 'DELETE' | 'PATCH' | 'GET' | 'POST' = 'GET',
+    method: 'DELETE' | 'PUT' | 'GET' | 'POST' = 'GET',
     headersObj: any = null,
     data: any = null
   ): Promise<T> {
