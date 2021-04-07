@@ -1,0 +1,21 @@
+<div class="category-tree">
+  <h2>Categories</h2>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let category of categories">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ category.title }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ category.description }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-selection-list [multiple]="false">
+        <mat-list-option *ngFor="let item of category.items">
+          {{ item.title }}
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+

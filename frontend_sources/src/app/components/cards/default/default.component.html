@@ -1,0 +1,15 @@
+<mat-card routerLink="/item-page">
+  <mat-card-header>
+    <mat-card-title>{{ item.title }}</mat-card-title>
+  </mat-card-header>
+  <img
+    mat-card-image
+    [src]="item.photos[0]"
+    alt="Item photo"
+  />
+  <mat-card-content>
+    <p>
+      {{ item.description }}
+    </p>
+  </mat-card-content>
+</mat-card>

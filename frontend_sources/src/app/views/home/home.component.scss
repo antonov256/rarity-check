@@ -1,0 +1,63 @@
+.home {
+  &__welcome {
+    background-color: rgb(228, 228, 228);
+    background-image: url(../../../assets/img/w_Piranesi1.jpg);
+    background-size: cover;
+    background-position-y: center;
+    padding: 190px 0 50px;
+  }
+  &__search {
+    display: flex;
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 10px;
+  }
+
+  &__search-field {
+    flex: auto;
+    margin-right: 20px;
+  }
+
+  &__search-select {
+    margin-right: 20px;
+    width: 300px;
+    max-width: 40%;
+  }
+  &__search-submit {
+    font-size: 18px;
+    color: #fff;
+  }
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 20px;
+  }
+  &__section {
+    margin-top: 35px;
+    mat-paginator {
+      margin-top: 15px;
+    }
+  }
+
+  &__categories {
+    margin-top: 30px;
+    button {
+      font-size: 24px;
+      padding: 10px 20px;
+      font-weight: 400;
+    }
+  }
+}
+
+::ng-deep {
+  .home {
+    &__search {
+      .mat-form-field-appearance-outline .mat-form-field-wrapper {
+        margin: 0;
+      }
+      .mat-form-field-wrapper {
+        padding: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+<div class="image-box">
+  <img [src]="image" alt="Upload prewiew">
+  <button mat-icon-button [class]="!favorite ? 'fav ' + 'white': 'fav'" [color]="favorite? 'primary' : ''" (click)="emitToggle()"><mat-icon>star</mat-icon></button>
+  <button mat-icon-button class="del" color="warn" (click)="emitRemove()"><mat-icon>delete</mat-icon></button>
+</div>

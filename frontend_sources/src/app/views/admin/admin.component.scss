@@ -1,0 +1,12 @@
+.admin{
+  &__item-button {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0px;
+    button {
+      font-size: 24px;
+      padding: 10px 20px;
+      font-weight: 400;
+    }
+  }
+}

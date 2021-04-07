@@ -1,0 +1,18 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ wishItem.item.title }}</mat-card-title>
+  </mat-card-header>
+  <img
+    mat-card-image
+    [src]="wishItem.item.photos[0]"
+    alt="Wish item photo"
+  />
+  <mat-card-content>
+    <p>
+      {{ wishItem.item.description }}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-flat-button color="warn" mat-button (click)="deleteHandler()">Delete</button>
+  </mat-card-actions>
+</mat-card>

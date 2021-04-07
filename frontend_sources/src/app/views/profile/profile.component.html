@@ -1,0 +1,109 @@
+<div class="profile container">
+  <h1 headline>Jhon Bllaskovich</h1>
+  <div class="profile__links">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title> Wish List </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-button color="primary" routerLink="/portfolio">
+          Go to
+        </button>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title> Own List </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-button color="primary" routerLink="/portfolio">
+          Go to
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <form class="profile__form">
+    <h2 class="profile__subtitle" title>Edit profile</h2>
+    <mat-form-field class="profile__input">
+      <mat-label>Username</mat-label>
+      <input matInput required placeholder="test@example.com" [formControl]="newEmail" type="email" />
+      <mat-error *ngIf="newEmail.invalid">{{getEmailErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="profile__input">
+      <mat-label>Phone number</mat-label>
+      <input matInput required placeholder="88005553535" [formControl]="phone" type="tel" />
+      <mat-error *ngIf="phone.invalid">{{getPhoneErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="saveHandler()">Save</button>
+  </form>
+  <form class="profile__form">
+    <h2 class="profile__subtitle">Change password</h2>
+    <mat-form-field class="profile__input">
+      <mat-label>Old Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        autocomplete
+        required
+        name="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+        type="button"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field class="profile__input">
+      <mat-label>New Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        autocomplete
+        required
+        name="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+        type="button"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field class="profile__input">
+      <mat-label>Repeat New Password</mat-label>
+      <input
+        matInput
+        [type]="hidePasswordRepeat ? 'password' : 'text'"
+        autocomplete
+        required
+        name="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePasswordRepeat = !hidePasswordRepeat"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePasswordRepeat"
+        type="button"
+      >
+        <mat-icon>{{
+          hidePasswordRepeat ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+  <button mat-flat-button color="primary">Change</button>
+</div>

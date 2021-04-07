@@ -1,0 +1,17 @@
+.footer {
+  width: 100%;
+  background-color: var(--second-color);
+  padding: 25px 0;
+
+  &__menu {
+    display: grid;
+    font-family: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin-bottom: 20px;
+  }
+
+  &__bottom {
+    text-align: center;
+    padding-top: 20px;
+  }
+}

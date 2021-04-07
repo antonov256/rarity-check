@@ -1,0 +1,73 @@
+<mat-card class="auth__form">
+  <form ngNativeValidate [formGroup]="form">
+    <mat-card-title class="auth__subtitle">
+      Enter details below to Sign Up
+    </mat-card-title>
+    <mat-form-field appearance="outline" class="auth__input">
+      <mat-label>Full Name</mat-label>
+      <input matInput required placeholder="Enter your full name" formControlName="fullName"/>
+      <mat-error *ngIf="form.controls['fullName'].invalid">{{getFullNameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="auth__input">
+      <mat-label>E-mail</mat-label>
+      <input matInput required placeholder="test@example.com" type="email" formControlName="email"/>
+      <mat-error *ngIf="form.controls['email'].invalid">{{getEmailErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="auth__input">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="hidePassword ? 'password' : 'text'"
+        autocomplete
+        required
+        name="password"
+        formControlName="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePassword = !hidePassword"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+        type="button"
+      >
+        <mat-icon>{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.controls['password'].invalid">{{getPasswordErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="auth__input">
+      <mat-label>Repeat Password</mat-label>
+      <input
+        matInput
+        [type]="hidePasswordRepeat ? 'password' : 'text'"
+        autocomplete
+        required
+        name="password"
+        formControlName="passwordRepeat"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hidePasswordRepeat = !hidePasswordRepeat"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePasswordRepeat"
+        type="button"
+      >
+        <mat-icon>{{
+          hidePasswordRepeat ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.controls['passwordRepeat'].invalid">{{getPasswordRepeatErrorMessage()}}</mat-error>
+      <!-- <mat-error *ngIf="form.hasError('passwordRepeat')">Passwords don`t match</mat-error> -->
+    </mat-form-field>
+    <div class="auth__hint" routerLink="/auth/sign-in">
+      Already have an account? Sign In.
+    </div>
+
+    <button class="auth__submit" mat-flat-button color="primary" [disabled]='form.invalid' (click)="registerHandler()">
+      Sign Up
+    </button>
+  </form>
+</mat-card>

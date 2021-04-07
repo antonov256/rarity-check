@@ -1,0 +1,10 @@
+.header {
+  &__row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__btn {
+    margin-right: 15px;
+  }
+}
