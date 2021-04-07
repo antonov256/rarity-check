@@ -1,3 +1,4 @@
+import { ICategory } from './iternal/ICategory';
 import { IAuthResponse } from './http/IAuthResponse';
 import { IAPIResponse } from './http/IAPIResponse';
 import { IWishItem } from './iternal/IWishItem';
@@ -13,6 +14,7 @@ export {
   IOwnItem,
   IWishItem,
   IPortfolio,
+  ICategory,
   IAPIResponse,
   IAuthResponse
 }
