@@ -12,6 +12,7 @@ import org.mapstruct.Mapping;
 public interface UserJpaMapper {
     @Mapping(source = "username", target = "userDetails.username")
     @Mapping(source = "password", target = "userDetails.password")
+    @Mapping(source = "authorities", target = "userDetails.authorities")
     @Mapping(source = "accountNonExpired", target = "userDetails.accountNonExpired")
     @Mapping(source = "accountNonLocked", target = "userDetails.accountNonLocked")
     @Mapping(source = "credentialsNonExpired", target = "userDetails.credentialsNonExpired")
