@@ -16,6 +16,7 @@ import { PortfolioComponent } from "./views/portfolio/portfolio.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { ItemComponent } from './views/item/item.component';
 import { ItemCreateComponent } from './views/item/create/create.component';
+import { ItemEditComponent } from "./views/item/edit/edit.component";
 
 const authRoutes = [
   { path: "", component: SignInComponent },
@@ -30,6 +31,7 @@ const categoryRoutes = [
 
 const itemRoutes = [
   { path: "create", component: ItemCreateComponent },
+  { path: "edit/:id", component: ItemEditComponent },
 ];
 
 const routes: Routes = [

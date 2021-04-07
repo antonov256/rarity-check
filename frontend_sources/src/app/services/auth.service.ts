@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import jwtDecode from 'jwt-decode';
 import { IAuthResponse } from '../models';
 import { HttpRequestsService } from './http-requests.service';
-import { POST_USER_LOGIN } from 'src/environments/api.routes';
 
 @Injectable({
   providedIn: 'root'
