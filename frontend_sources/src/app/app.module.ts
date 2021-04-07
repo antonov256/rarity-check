@@ -49,6 +49,7 @@ import { CategoryTreeComponent } from './components/category-tree/category-tree.
 import { CategoryFormComponent } from './components/forms/category-form/category-form.component';
 import { ItemFormComponent } from './components/forms/item-form/item-form.component';
 import { ImageBoxComponent } from './components/image-box/image-box.component';
+import { ItemEditComponent } from './views/item/edit/edit.component';
 
 import { NotificationsService } from './services/notification.service';
 import { HttpRequestsService } from './services/http-requests.service';
@@ -85,6 +86,7 @@ import { CustomInterceptorService } from "./services/custom-interceptor.service"
     ItemCreateComponent,
     ItemFormComponent,
     ImageBoxComponent,
+    ItemEditComponent,
   ],
   imports: [
     BrowserModule,
