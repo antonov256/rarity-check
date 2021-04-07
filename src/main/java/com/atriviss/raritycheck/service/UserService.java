@@ -4,13 +4,13 @@ import com.atriviss.raritycheck.controller_rest.exception.UserAlreadyExistsExcep
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.mapper.UserApiMapper;
-import com.atriviss.raritycheck.model.Authority;
 import com.atriviss.raritycheck.dto_jpa.rc_users.UserJpaDto;
 import com.atriviss.raritycheck.dto_jpa.rc_users.mapper.UserJpaMapper;
-import com.atriviss.raritycheck.repository.rc_users.UserRepository;
+import com.atriviss.raritycheck.model.Authority;
 import com.atriviss.raritycheck.model.User;
 import com.atriviss.raritycheck.model.UserDetailsContainer;
 import com.atriviss.raritycheck.model.UserToCreate;
+import com.atriviss.raritycheck.repository.rc_users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.TimeZone;
 
 @Service
@@ -68,5 +69,15 @@ public class UserService {
         UserApiDto registeredUserApiDto = apiMapper.toDto(registeredUser);
 
         return registeredUserApiDto;
+    }
+
+    public Optional<UserApiDto> getUserById(Integer id) {
+        Optional<UserJpaDto> optionalUserJpaDto = repository.findById(id);
+        return optionalUserJpaDto.map(jpaMapper::toModel).map(apiMapper::toDto);
+    }
+
+    public Optional<UserApiDto> getUserByUsername(String username) {
+        Optional<UserJpaDto> optionalUserJpaDto = repository.findByUsername(username);
+        return optionalUserJpaDto.map(jpaMapper::toModel).map(apiMapper::toDto);
     }
 }

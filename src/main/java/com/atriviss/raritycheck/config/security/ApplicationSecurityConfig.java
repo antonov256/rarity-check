@@ -1,6 +1,7 @@
 package com.atriviss.raritycheck.config.security;
 
 import com.atriviss.raritycheck.dto_jpa.rc_users.mapper.UserJpaMapper;
+import com.atriviss.raritycheck.model.Authority;
 import com.atriviss.raritycheck.repository.rc_users.UserRepository;
 import com.atriviss.raritycheck.service.DatabaseUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/items/**").permitAll()
 
                 // Private endpoints
+                .antMatchers("/api/users/**").hasAuthority(Authority.ADMIN.getAuthority())
+                .antMatchers(HttpMethod.POST, "/api/categories/**").hasAuthority(Authority.ADMIN.getAuthority())
+                .antMatchers(HttpMethod.PUT, "/api/categories/**").hasAuthority(Authority.ADMIN.getAuthority())
                 .anyRequest().authenticated();
 
         // Add JWT token filter
