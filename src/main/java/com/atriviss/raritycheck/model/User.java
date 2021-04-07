@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.util.TimeZone;
 
 @Getter
-public class User extends UserLite {
-    private final Portfolio portfolio;
+public class User extends UserToCreate {
+    private final Integer id;
 
-    public User(Integer id, String username, String password, String name, String surname, String email, TimeZone timeZone, Portfolio portfolio) {
-        super(id, username, password, name, surname, email, timeZone);
-        this.portfolio = portfolio;
+    public User(Integer id, UserDetailsContainer userDetails, String name, String surname, String email, TimeZone timezone) {
+        super( userDetails, name, surname, email, timezone);
+        this.id = id;
     }
 }
