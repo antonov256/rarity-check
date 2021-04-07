@@ -7,13 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserToCreateApiDto {
-    private String email;
+public class UserLoginApiDto {
     private String username;
     private String password;
-    private String rePassword;
 
-    private String name;
-    private String surname;
-    private String timezone;
+    public UserLoginApiDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
