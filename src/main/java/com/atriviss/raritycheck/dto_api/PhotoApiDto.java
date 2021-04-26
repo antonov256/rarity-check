@@ -3,10 +3,12 @@ package com.atriviss.raritycheck.dto_api;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.hateoas.server.core.Relation;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Relation(collectionRelation = "photos", itemRelation = "photo")
 public class PhotoApiDto {
     private Long id;
     private Integer itemId;
