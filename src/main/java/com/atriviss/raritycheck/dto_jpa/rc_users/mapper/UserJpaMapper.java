@@ -13,6 +13,7 @@ public interface UserJpaMapper {
     @Mapping(source = "username", target = "userDetails.username")
     @Mapping(source = "password", target = "userDetails.password")
     @Mapping(source = "accountNonExpired", target = "userDetails.accountNonExpired")
+    @Mapping(source = "authorities", target = "userDetails.authorities")
     @Mapping(source = "accountNonLocked", target = "userDetails.accountNonLocked")
     @Mapping(source = "credentialsNonExpired", target = "userDetails.credentialsNonExpired")
     @Mapping(source = "enabled", target = "userDetails.enabled")
