@@ -1,6 +1,7 @@
 package com.atriviss.raritycheck.controller_rest;
 
 import com.atriviss.raritycheck.config.security.JwtTokenUtil;
+import com.atriviss.raritycheck.dto_api.AuthenticationApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
@@ -40,23 +41,32 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserApiDto> login(@RequestBody @Valid UserLoginApiDto loginCredentialsApiDto) {
+    public ResponseEntity<AuthenticationApiDto> login(@RequestBody @Valid UserLoginApiDto loginCredentialsApiDto) {
         try {
-            Authentication authenticate = authenticationManager
+            Authentication authentication = authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     loginCredentialsApiDto.getUsername(), loginCredentialsApiDto.getPassword()
                             )
                     );
 
-            User user = (User) authenticate.getPrincipal();
+            Object principal = authentication.getPrincipal();
+            if(!(principal instanceof User))
+                throw new BadCredentialsException("Authentication is not User");
+
+            User user = (User) principal;
+
+            String token = jwtTokenUtil.generateAccessToken(user);
+            UserApiDto userApiDto = userApiMapper.toDto(user);
+
+            AuthenticationApiDto authenticationApiDto = new AuthenticationApiDto(token, userApiDto);
 
             return ResponseEntity.ok()
                     .header(
                             HttpHeaders.AUTHORIZATION,
-                            jwtTokenUtil.generateAccessToken(user)
+                            token
                     )
-                    .body(userApiMapper.toDto(user));
+                    .body(authenticationApiDto);
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
