@@ -7,8 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PhotoToCreate {
+public class PhotoToCreate extends PhotoToAddToItem {
     private Integer itemId;
-    private String bucketName;
-    private String key;
+
+    public PhotoToCreate(Integer itemId, PhotoToAddToItem photoToAddToItem) {
+        super(photoToAddToItem.getBucketName(), photoToAddToItem.getKey());
+        this.itemId = itemId;
+    }
 }
