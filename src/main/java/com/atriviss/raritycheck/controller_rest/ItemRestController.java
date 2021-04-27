@@ -39,8 +39,14 @@ public class ItemRestController {
     }
 
     @GetMapping("/items")
-    public PagedModel<EntityModel<ItemApiDto>> all(@PageableDefault Pageable pageable) {
-        Page<ItemApiDto> apiDtoPage = service.findAll(pageable);
+    public PagedModel<EntityModel<ItemApiDto>> all(@RequestParam(value = "search", required = false) String search, @PageableDefault Pageable pageable) {
+        Page<ItemApiDto> apiDtoPage;
+        if(search == null || search.isEmpty()) {
+            apiDtoPage = service.findAll(pageable);
+        } else {
+            apiDtoPage = service.findAllWithSearch(pageable, search);
+        }
+
         PagedModel<EntityModel<ItemApiDto>> entityModels = pagedResourcesAssembler.toModel(apiDtoPage);
 
         return entityModels;

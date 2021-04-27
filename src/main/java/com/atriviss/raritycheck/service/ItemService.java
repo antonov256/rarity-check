@@ -1,7 +1,12 @@
 package com.atriviss.raritycheck.service;
 
+import com.atriviss.raritycheck.service.search.SpecificationsBuilder;
+import com.atriviss.raritycheck.service.search.SearchOperation;
 import com.atriviss.raritycheck.dto_api.ItemApiDto;
+import com.atriviss.raritycheck.dto_api.PhotoApiDto;
 import com.atriviss.raritycheck.dto_api.mapper.*;
+import com.atriviss.raritycheck.dto_api.to_create.ItemToCreate;
+import com.atriviss.raritycheck.dto_api.to_create.PhotoToCreate;
 import com.atriviss.raritycheck.dto_jpa.pc_app.ItemJpaDto;
 import com.atriviss.raritycheck.dto_jpa.pc_app.QualityJpaDto;
 import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.*;
@@ -10,10 +15,14 @@ import com.atriviss.raritycheck.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ItemService {
@@ -50,6 +59,9 @@ public class ItemService {
 
     @Autowired
     private VideoJpaMapper videoJpaMapper;
+
+    @Autowired
+    private PhotoService photoService;
     
 
     public Optional<ItemApiDto> findById(Integer id) {
@@ -64,16 +76,50 @@ public class ItemService {
         return apiDtoPage;
     }
 
-    public List<ItemApiDto> findAll() {
-        List<ItemJpaDto> jpaDtoList = repository.findAll();
-        List<Item> list = jpaMapper.toItemList(jpaDtoList);
-        List<ItemApiDto> apiDtoList = apiMapper.toItemApiDtoList(list);
+    public Page<ItemApiDto> findAllWithSearch(Pageable pageable, String searchQuery) {
+        SpecificationsBuilder<ItemJpaDto> builder = new SpecificationsBuilder<>();
+        List<String> codes = SearchOperation.codes();
+        String codesRegex = String.join("|", codes);
+        Pattern pattern = Pattern.compile("(\\w+?)(" + codesRegex + ")(\\w+?),");
+        Matcher matcher = pattern.matcher(searchQuery + ",");
 
-        return apiDtoList;
+        while (matcher.find()) {
+            builder.with(matcher.group(1), SearchOperation.fromCode(matcher.group(2)), matcher.group(3));
+        }
+
+        Specification<ItemJpaDto> specification = builder.build();
+
+        Page<ItemJpaDto> jpaDtoPage = repository.findAll(specification, pageable);
+        Page<ItemApiDto> apiDtoPage = jpaDtoPage.map(jpaMapper::toItem).map(apiMapper::toItemApiDto);
+
+        return apiDtoPage;
     }
-    
-    public ItemApiDto create(ItemApiDto itemApiDto) {
-        ItemJpaDto jpaDto = jpaMapper.toItemJpaDto(apiMapper.toItem(itemApiDto));
+
+    public Page<ItemApiDto> findAllByTitleContains(Pageable pageable, String titleFragment) {
+        Page<ItemJpaDto> jpaDtoPage = repository.findByTitleContains(titleFragment, pageable);
+        Page<ItemApiDto> apiDtoPage = jpaDtoPage.map(jpaMapper::toItem).map(apiMapper::toItemApiDto);
+
+        return apiDtoPage;
+    }
+
+    @Transactional
+    public ItemApiDto create(ItemToCreate itemToCreate) {
+        ItemJpaDto jpaDto = jpaMapper.toItemJpaDto(apiMapper.toItem(itemToCreate));
+
+        ItemJpaDto createdItemJpaDto = repository.save(jpaDto);
+        Item createdItem = jpaMapper.toItem(createdItemJpaDto);
+
+        List<PhotoToCreate> photosToCreate = itemToCreate.getPhotos();
+        photosToCreate.forEach(p -> p.setItemId(createdItem.getId()));
+        List<PhotoApiDto> createdPhotos = photoService.savePhotos(photosToCreate);
+
+        ItemApiDto createdApiDto = apiMapper.toItemApiDto(createdItem);
+        createdApiDto.setPhotos(createdPhotos);
+        return createdApiDto;
+    }
+
+    public ItemApiDto create(ItemApiDto apiDto) {
+        ItemJpaDto jpaDto = jpaMapper.toItemJpaDto(apiMapper.toItem(apiDto));
         ItemJpaDto savedJpaDto = repository.save(jpaDto);
         ItemApiDto savedApiDto = apiMapper.toItemApiDto(jpaMapper.toItem(savedJpaDto));
 
