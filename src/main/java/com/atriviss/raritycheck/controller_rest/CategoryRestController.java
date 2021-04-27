@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class CategoryRestController {
     }
 
     @PostMapping("/categories")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> create(@RequestBody CategoryApiDto apiDto) {
         EntityModel<CategoryApiDto> entityModel = assembler.toModel(service.create(apiDto));
 
@@ -55,6 +57,7 @@ public class CategoryRestController {
     }
 
     @PutMapping("/categories/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> replace(@RequestBody CategoryApiDto apiDto, @PathVariable Integer id) {
         CategoryApiDto replacedApiDto = service.replaceCategory(id, apiDto);
         EntityModel<CategoryApiDto> entityModel = assembler.toModel(replacedApiDto);
@@ -65,6 +68,7 @@ public class CategoryRestController {
     }
 
     @DeleteMapping("/categories/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

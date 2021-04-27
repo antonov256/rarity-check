@@ -3,6 +3,7 @@ package com.atriviss.raritycheck.controller_rest;
 import com.atriviss.raritycheck.controller_rest.exception.ItemNotFoundException;
 import com.atriviss.raritycheck.controller_rest.model_assembler.ItemModelAssembler;
 import com.atriviss.raritycheck.dto_api.ItemApiDto;
+import com.atriviss.raritycheck.dto_api.to_create.ItemToCreate;
 import com.atriviss.raritycheck.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -45,8 +47,10 @@ public class ItemRestController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<?> create(@RequestBody ItemApiDto apiDto) {
-        EntityModel<ItemApiDto> entityModel = assembler.toModel(service.create(apiDto));
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> create(@RequestBody ItemToCreate itemToCreate) {
+        ItemApiDto apiDto = service.create(itemToCreate);
+        EntityModel<ItemApiDto> entityModel = assembler.toModel(apiDto);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -54,6 +58,7 @@ public class ItemRestController {
     }
 
     @PutMapping("/items/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> replace(@RequestBody ItemApiDto apiDto, @PathVariable Integer id) {
         ItemApiDto replacedApiDto = service.replaceItem(id, apiDto);
         EntityModel<ItemApiDto> entityModel = assembler.toModel(replacedApiDto);
@@ -64,6 +69,7 @@ public class ItemRestController {
     }
 
     @DeleteMapping("/items/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
