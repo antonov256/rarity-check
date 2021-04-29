@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Setter
 @EqualsAndHashCode
@@ -18,6 +19,7 @@ public class UserJpaDto {
     private String surname;
     private String email;
     private String timezone;
+    private OffsetDateTime lastSeen;
 
     private String authorities;
     private Boolean accountNonExpired;
@@ -66,6 +68,12 @@ public class UserJpaDto {
     @Column(name = "timezone", nullable = false, length = 20)
     public String getTimezone() {
         return timezone;
+    }
+
+    @Basic
+    @Column(name = "last_seen", nullable = false)
+    public OffsetDateTime getLastSeen() {
+        return lastSeen;
     }
 
     @Basic

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -60,7 +61,8 @@ public class UserService {
                 userRegisterApiDto.getName(),
                 userRegisterApiDto.getSurname(),
                 userRegisterApiDto.getEmail(),
-                TimeZone.getTimeZone(userRegisterApiDto.getTimezone())
+                TimeZone.getTimeZone(userRegisterApiDto.getTimezone()),
+                OffsetDateTime.now()
         );
 
         UserJpaDto registeredUserJpaDto = repository.save(jpaMapper.toJpaDto(userToCreate));
