@@ -33,7 +33,7 @@ public class AuthRestController {
     private UserApiMapper userApiMapper;
 
 
-    @PutMapping("/registration")
+    @PostMapping("/registration")
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserApiDto registerUser(@RequestBody UserRegisterApiDto userRegisterApiDto) {
         UserApiDto createdUser = userService.register(userRegisterApiDto);
