@@ -12,11 +12,13 @@ import com.atriviss.raritycheck.model.UserDetailsContainer;
 import com.atriviss.raritycheck.model.UserToCreate;
 import com.atriviss.raritycheck.repository.rc_users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -35,6 +37,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Value("${service.user.last-seen-update-threshold-in-seconds}")
+    private Integer lastSeenUpdateThresholdInSeconds;
 
     @Transactional
     public UserApiDto register(UserRegisterApiDto userRegisterApiDto) throws UserAlreadyExistsException {
@@ -71,6 +76,13 @@ public class UserService {
         UserApiDto registeredUserApiDto = apiMapper.toDto(registeredUser);
 
         return registeredUserApiDto;
+    }
+
+    @Transactional
+    public void updateUserLastSeen(User user){
+        Duration duration = Duration.between(user.getLastSeen(), OffsetDateTime.now());
+        if(duration.getSeconds() > lastSeenUpdateThresholdInSeconds)
+            repository.updateLastSeen(user.getId(), OffsetDateTime.now());
     }
 
     public Optional<UserApiDto> getUserById(Integer id) {
