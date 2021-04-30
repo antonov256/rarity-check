@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class ItemRestController {
+public class ItemsRestController {
     @Autowired
     private ItemService service;
 
@@ -39,7 +39,7 @@ public class ItemRestController {
     }
 
     @GetMapping("/items")
-    public PagedModel<EntityModel<ItemApiDto>> all(@RequestParam(value = "search", required = false) String search, @PageableDefault Pageable pageable) {
+    public PagedModel<?> all(@RequestParam(value = "search", required = false) String search, @PageableDefault Pageable pageable) {
         Page<ItemApiDto> apiDtoPage;
         if(search == null || search.isEmpty()) {
             apiDtoPage = service.findAll(pageable);
@@ -47,9 +47,13 @@ public class ItemRestController {
             apiDtoPage = service.findAllWithSearch(pageable, search);
         }
 
-        PagedModel<EntityModel<ItemApiDto>> entityModels = pagedResourcesAssembler.toModel(apiDtoPage);
-
-        return entityModels;
+        if(apiDtoPage.isEmpty()) {
+            PagedModel<?> emptyPagedModel = pagedResourcesAssembler.toEmptyModel(apiDtoPage, ItemApiDto.class);
+            return emptyPagedModel;
+        } else {
+            PagedModel<EntityModel<ItemApiDto>> pagedModel = pagedResourcesAssembler.toModel(apiDtoPage);
+            return pagedModel;
+        }
     }
 
     @PostMapping("/items")
