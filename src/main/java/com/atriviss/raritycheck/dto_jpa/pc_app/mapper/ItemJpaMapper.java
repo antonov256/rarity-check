@@ -14,12 +14,8 @@ import java.util.List;
         imports = {Photo.class, Video.class}
 )
 public interface ItemJpaMapper {
-    @Mapping(source = "category", target = "classification.category")
-    @Mapping(source = "subcategory", target = "classification.subcategory")
     Item toItem(ItemJpaDto itemJpaDto);
 
-    @Mapping(source = "classification.category", target = "category")
-    @Mapping(source = "classification.subcategory", target = "subcategory")
     ItemJpaDto toItemJpaDto(Item item);
 
     @Mapping(source = "category", target = "classification.category")

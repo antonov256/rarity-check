@@ -1,6 +1,7 @@
 package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
 
 import com.atriviss.raritycheck.dto_jpa.pc_app.CategoryJpaDto;
+import com.atriviss.raritycheck.dto_jpa.pc_app.ClassificationJpaDto;
 import com.atriviss.raritycheck.dto_jpa.pc_app.SubcategoryJpaDto;
 import com.atriviss.raritycheck.model.Classification;
 import org.mapstruct.Mapper;
@@ -17,4 +18,8 @@ public interface ClassificationJpaMapper {
 
     @Mapping(source = "classification.subcategory", target = ".")
     SubcategoryJpaDto toSubcategoryJpaDto(Classification classification);
+
+    ClassificationJpaDto toClassificationJpaDto(Classification classification);
+
+    Classification toClassification(ClassificationJpaDto classificationJpaDto);
 }

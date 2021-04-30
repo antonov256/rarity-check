@@ -37,6 +37,11 @@ public class ItemService {
     @Autowired
     private ItemJpaMapper jpaMapper;
 
+    @Autowired
+    private ClassificationApiMapper classificationApiMapper;
+
+    @Autowired
+    private ClassificationJpaMapper classificationJpaMapper;
 
     @Autowired
     private CategoryApiMapper categoryApiMapper;
@@ -129,8 +134,7 @@ public class ItemService {
                 .map(jpaDto -> {
                     jpaDto.setTitle(newItemApiDto.getTitle());
                     jpaDto.setDescription(newItemApiDto.getDescription());
-                    jpaDto.setCategory(categoryJpaMapper.toCategoryJpaDto(categoryApiMapper.toCategory(newItemApiDto.getClassification().getCategory())));
-                    jpaDto.setSubcategory(subcategoryJpaMapper.toSubcategoryJpaDto(subcategoryApiMapper.toSubcategory(newItemApiDto.getClassification().getSubcategory())));
+                    jpaDto.setClassification(classificationJpaMapper.toClassificationJpaDto(classificationApiMapper.toClassification(newItemApiDto.getClassification())));
                     jpaDto.setQuality(new QualityJpaDto(newItemApiDto.getQuality().getValue()));
 
                     List<PhotoApiDto> photos = newItemApiDto.getPhotos();
