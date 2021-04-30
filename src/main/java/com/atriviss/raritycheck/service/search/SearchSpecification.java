@@ -33,7 +33,9 @@ public class SearchSpecification<T> implements Specification<T> {
                     return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
                 case LIKE:
                     if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                        return criteriaBuilder.like(root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+                        return criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%"
+                        );
                     } else {
                         return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue());
                     }
