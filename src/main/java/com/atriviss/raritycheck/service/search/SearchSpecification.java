@@ -3,10 +3,7 @@ package com.atriviss.raritycheck.service.search;
 import com.atriviss.raritycheck.controller_rest.exception.SearchQueryException;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 public class SearchSpecification<T> implements Specification<T> {
     private final SearchCriteria criteria;
@@ -20,30 +17,45 @@ public class SearchSpecification<T> implements Specification<T> {
         try {
             switch (criteria.getOperation()) {
                 case EQUALITY:
-                    return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue());
+                    return criteriaBuilder.equal(getPath(root, criteria.getKey()), criteria.getValue());
                 case NEGATION:
-                    return criteriaBuilder.notEqual(root.get(criteria.getKey()), criteria.getValue());
+                    return criteriaBuilder.notEqual(getPath(root, criteria.getKey()), criteria.getValue());
                 case GREATER_THAN:
-                    return criteriaBuilder.greaterThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return criteriaBuilder.greaterThan(getPathString(root, criteria.getKey()), criteria.getValue().toString());
                 case GREATER_THAN_OR_EQUALS:
-                    return criteriaBuilder.greaterThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return criteriaBuilder.greaterThanOrEqualTo(getPathString(root, criteria.getKey()), criteria.getValue().toString());
                 case LESS_THAN:
-                    return criteriaBuilder.lessThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return criteriaBuilder.lessThan(getPathString(root, criteria.getKey()), criteria.getValue().toString());
                 case LESS_THAN_OR_EQUALS:
-                    return criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue().toString());
+                    return criteriaBuilder.lessThanOrEqualTo(getPathString(root, criteria.getKey()), criteria.getValue().toString());
                 case LIKE:
                     if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                        return criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%"
-                        );
+                        String likePattern = "%" + criteria.getValue().toString().toLowerCase() + "%";
+                        return criteriaBuilder.like(criteriaBuilder.lower(getPathString(root, criteria.getKey())), likePattern);
                     } else {
-                        return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue());
+                        return criteriaBuilder.equal(getPath(root, criteria.getKey()), criteria.getValue());
                     }
                 default:
                     throw new SearchQueryException("Wrong criteria operation: " + criteria.getOperation());
             }
         } catch (IllegalArgumentException e) {
-            throw new SearchQueryException("Something wrong with searchCriteria: " + criteria.toString(), e);
+            throw new SearchQueryException("Something wrong with searchCriteria: " + criteria.toString() + ". Error message:" + e.getMessage(), e);
         }
+    }
+
+    private Path<String> getPathString(Root<T> root, String attributeName) {
+        Path<String> path = (Path<String>) root;
+        for (String part : attributeName.split("\\.")) {
+            path = path.get(part);
+        }
+        return path;
+    }
+
+    private Path<T> getPath(Root<T> root, String attributeName) {
+        Path<T> path = root;
+        for (String part : attributeName.split("\\.")) {
+            path = path.get(part);
+        }
+        return path;
     }
 }

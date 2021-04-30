@@ -82,11 +82,15 @@ public class ItemService {
         SpecificationsBuilder<ItemJpaDto> builder = new SpecificationsBuilder<>();
         List<String> codes = SearchOperation.codes();
         String codesRegex = String.join("|", codes);
-        Pattern pattern = Pattern.compile("(\\w+?)(" + codesRegex + ")(\\w+?),");
+        Pattern pattern = Pattern.compile("((\\w+\\.)*\\w+)(" + codesRegex + ")(\\w+?),");
         Matcher matcher = pattern.matcher(searchQuery + ",");
 
         while (matcher.find()) {
-            builder.with(matcher.group(1), SearchOperation.fromCode(matcher.group(2)), matcher.group(3));
+            String key = matcher.group(1);
+            SearchOperation operation = SearchOperation.fromCode(matcher.group(3));
+            String value = matcher.group(4);
+
+            builder.with(key, operation, value);
         }
 
         Specification<ItemJpaDto> specification = builder.build();

@@ -32,7 +32,7 @@ public enum SearchOperation {
     public static SearchOperation fromCode(final String input) {
         switch (input) {
             case ":": return EQUALITY;
-            case "!": return NEGATION;
+            case "!:": return NEGATION;
             case ">": return GREATER_THAN;
             case ">:": return GREATER_THAN_OR_EQUALS;
             case "<": return LESS_THAN;
