@@ -1,5 +1,6 @@
 package com.atriviss.raritycheck.service;
 
+import com.atriviss.raritycheck.dto_api.to_create.PhotoToAddToItem;
 import com.atriviss.raritycheck.service.search.SpecificationsBuilder;
 import com.atriviss.raritycheck.service.search.SearchOperation;
 import com.atriviss.raritycheck.dto_api.ItemApiDto;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -111,19 +113,11 @@ public class ItemService {
 
         List<PhotoToCreate> photosToCreate = itemToCreate.getPhotos();
         photosToCreate.forEach(p -> p.setItemId(createdItem.getId()));
-        List<PhotoApiDto> createdPhotos = photoService.savePhotos(photosToCreate);
+        List<PhotoApiDto> createdPhotos = photoService.createPhotos(photosToCreate);
 
         ItemApiDto createdApiDto = apiMapper.toItemApiDto(createdItem);
         createdApiDto.setPhotos(createdPhotos);
         return createdApiDto;
-    }
-
-    public ItemApiDto create(ItemApiDto apiDto) {
-        ItemJpaDto jpaDto = jpaMapper.toItemJpaDto(apiMapper.toItem(apiDto));
-        ItemJpaDto savedJpaDto = repository.save(jpaDto);
-        ItemApiDto savedApiDto = apiMapper.toItemApiDto(jpaMapper.toItem(savedJpaDto));
-
-        return savedApiDto;
     }
 
     public ItemApiDto replaceItem(Integer id, ItemApiDto newItemApiDto) {
@@ -134,23 +128,38 @@ public class ItemService {
                     jpaDto.setCategory(categoryJpaMapper.toCategoryJpaDto(categoryApiMapper.toCategory(newItemApiDto.getClassification().getCategory())));
                     jpaDto.setSubcategory(subcategoryJpaMapper.toSubcategoryJpaDto(subcategoryApiMapper.toSubcategory(newItemApiDto.getClassification().getSubcategory())));
                     jpaDto.setQuality(new QualityJpaDto(newItemApiDto.getQuality().getValue()));
-                    jpaDto.setPhotos(photoJpaMapper.toPhotoJpaDtoList(photoApiMapper.toPhotoList(newItemApiDto.getPhotos())));
+
+                    List<PhotoApiDto> photos = newItemApiDto.getPhotos();
+                    photoService.updatePhotos(id, photos);
+
                     jpaDto.setVideos(videoJpaMapper.toVideoJpaDtoList(videoApiMapper.toVideoList(newItemApiDto.getVideos())));
                     
                     ItemJpaDto updatedJpaDto = repository.save(jpaDto);
 
-                    return apiMapper.toItemApiDto(jpaMapper.toItem(updatedJpaDto));
+                    Item item = jpaMapper.toItem(updatedJpaDto);
+                    return apiMapper.toItemApiDto(item);
                 })
                 .orElseGet(() -> {
                     ItemJpaDto jpaDto = jpaMapper.toItemJpaDto(apiMapper.toItem(newItemApiDto));
                     jpaDto.setId(id);
                     ItemJpaDto savedJpaDto = repository.save(jpaDto);
 
-                    return apiMapper.toItemApiDto(jpaMapper.toItem(savedJpaDto));
+                    List<PhotoToCreate> photosToCreate = newItemApiDto.getPhotos().stream()
+                            .map(p -> new PhotoToCreate(savedJpaDto.getId(), new PhotoToAddToItem(p.getBucketName(), p.getKey())))
+                            .collect(Collectors.toList());
+
+                    List<PhotoApiDto> createdPhotos = photoService.createPhotos(photosToCreate);
+
+                    Item item = jpaMapper.toItem(savedJpaDto);
+                    ItemApiDto apiDto = apiMapper.toItemApiDto(item);
+                    apiDto.setPhotos(createdPhotos);
+
+                    return apiDto;
                 });
     }
 
     public void deleteById(Integer id) {
+        photoService.deleteByItemId(id);
         repository.deleteById(id);
     }
 }

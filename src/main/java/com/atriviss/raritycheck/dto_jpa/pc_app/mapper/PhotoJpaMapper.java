@@ -18,4 +18,6 @@ public interface PhotoJpaMapper {
     List<Photo> toPhotoList (List<PhotoJpaDto> photoJpaDtos);
 
     List<PhotoJpaDto> toPhotoJpaDtoList (List<Photo> photos);
+
+    List<PhotoJpaDto> toPhotoJpaDtoListFromPhotoToCreateList(List<PhotoToCreate> photoToCreateList);
 }
