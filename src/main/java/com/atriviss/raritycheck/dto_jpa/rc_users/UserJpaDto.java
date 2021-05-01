@@ -1,5 +1,6 @@
 package com.atriviss.raritycheck.dto_jpa.rc_users;
 
+import com.atriviss.raritycheck.validator.ValidEmail;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class UserJpaDto {
 
     private String name;
     private String surname;
+    @ValidEmail
     private String email;
     private String timezone;
     private OffsetDateTime lastSeen;
