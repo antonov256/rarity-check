@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "category", schema = "public", catalog = "rc_app")
@@ -13,6 +14,7 @@ public class CategoryJpaDto {
     private Integer id;
     private String name;
     private String description;
+    private List<SubcategoryJpaDto> subcategories;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +33,10 @@ public class CategoryJpaDto {
     @Column(name = "description", nullable = true, length = 200)
     public String getDescription() {
         return description;
+    }
+
+    @OneToMany(mappedBy = "categoryId")
+    public List<SubcategoryJpaDto> getSubcategories() {
+        return subcategories;
     }
 }
