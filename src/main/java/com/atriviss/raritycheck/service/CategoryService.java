@@ -3,6 +3,8 @@ package com.atriviss.raritycheck.service;
 import com.atriviss.raritycheck.dto_api.CategoryApiDto;
 import com.atriviss.raritycheck.dto_api.SubcategoryApiDto;
 import com.atriviss.raritycheck.dto_api.mapper.CategoryApiMapper;
+import com.atriviss.raritycheck.dto_api.to_create.CategoryToCreate;
+import com.atriviss.raritycheck.dto_api.to_create.SubcategoryToCreate;
 import com.atriviss.raritycheck.dto_jpa.pc_app.CategoryJpaDto;
 import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.CategoryJpaMapper;
 import com.atriviss.raritycheck.model.Category;
@@ -43,12 +45,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryApiDto create(CategoryApiDto categoryApiDto) {
-        CategoryJpaDto jpaDto = jpaMapper.toCategoryJpaDto(apiMapper.toCategory(categoryApiDto));
+    public CategoryApiDto create(CategoryToCreate toCreate) {
+        CategoryJpaDto jpaDto = jpaMapper.toCategoryJpaDto(toCreate);
         CategoryJpaDto savedJpaDto = repository.save(jpaDto);
         CategoryApiDto savedApiDto = apiMapper.toCategoryApiDto(jpaMapper.toCategory(savedJpaDto));
 
-        List<SubcategoryApiDto> subcategories = categoryApiDto.getSubcategories();
+        List<SubcategoryToCreate> subcategories = toCreate.getSubcategories();
         if(subcategories != null && subcategories.size() != 0) {
             List<SubcategoryApiDto> savedSubcategories = subcategories.stream()
                     .peek(s -> s.setCategoryId(savedApiDto.getId()))

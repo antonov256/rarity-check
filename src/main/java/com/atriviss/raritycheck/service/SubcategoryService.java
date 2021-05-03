@@ -2,6 +2,7 @@ package com.atriviss.raritycheck.service;
 
 import com.atriviss.raritycheck.dto_api.SubcategoryApiDto;
 import com.atriviss.raritycheck.dto_api.mapper.SubcategoryApiMapper;
+import com.atriviss.raritycheck.dto_api.to_create.SubcategoryToCreate;
 import com.atriviss.raritycheck.dto_jpa.pc_app.SubcategoryJpaDto;
 import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.SubcategoryJpaMapper;
 import com.atriviss.raritycheck.model.Subcategory;
@@ -36,8 +37,8 @@ public class SubcategoryService {
         return apiDtoList;
     }
 
-    public SubcategoryApiDto create(SubcategoryApiDto subcategoryApiDto) {
-        SubcategoryJpaDto jpaDto = jpaMapper.toSubcategoryJpaDto(apiMapper.toSubcategory(subcategoryApiDto));
+    public SubcategoryApiDto create(SubcategoryToCreate toCreate) {
+        SubcategoryJpaDto jpaDto = jpaMapper.toSubcategoryJpaDto(toCreate);
         SubcategoryJpaDto savedJpaDto = repository.save(jpaDto);
         SubcategoryApiDto savedApiDto = apiMapper.toSubcategoryApiDto(jpaMapper.toSubcategory(savedJpaDto));
 

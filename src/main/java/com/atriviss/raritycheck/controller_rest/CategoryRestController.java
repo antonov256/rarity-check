@@ -3,6 +3,7 @@ package com.atriviss.raritycheck.controller_rest;
 import com.atriviss.raritycheck.controller_rest.exception.CategoryNotFoundException;
 import com.atriviss.raritycheck.controller_rest.model_assembler.CategoryModelAssembler;
 import com.atriviss.raritycheck.dto_api.CategoryApiDto;
+import com.atriviss.raritycheck.dto_api.to_create.CategoryToCreate;
 import com.atriviss.raritycheck.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -48,8 +49,9 @@ public class CategoryRestController {
 
     @PostMapping("/categories")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> create(@RequestBody CategoryApiDto apiDto) {
-        EntityModel<CategoryApiDto> entityModel = assembler.toModel(service.create(apiDto));
+    public ResponseEntity<?> create(@RequestBody CategoryToCreate toCreate) {
+        CategoryApiDto created = service.create(toCreate);
+        EntityModel<CategoryApiDto> entityModel = assembler.toModel(created);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())

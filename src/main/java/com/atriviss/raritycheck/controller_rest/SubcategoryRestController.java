@@ -3,6 +3,7 @@ package com.atriviss.raritycheck.controller_rest;
 import com.atriviss.raritycheck.controller_rest.exception.SubcategoryNotFoundException;
 import com.atriviss.raritycheck.controller_rest.model_assembler.SubcategoryModelAssembler;
 import com.atriviss.raritycheck.dto_api.SubcategoryApiDto;
+import com.atriviss.raritycheck.dto_api.to_create.SubcategoryToCreate;
 import com.atriviss.raritycheck.service.SubcategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -48,8 +49,9 @@ public class SubcategoryRestController {
 
     @PostMapping("/subcategories")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> create(@RequestBody SubcategoryApiDto apiDto) {
-        EntityModel<SubcategoryApiDto> entityModel = assembler.toModel(service.create(apiDto));
+    public ResponseEntity<?> create(@RequestBody SubcategoryToCreate toCreate) {
+        SubcategoryApiDto created = service.create(toCreate);
+        EntityModel<SubcategoryApiDto> entityModel = assembler.toModel(created);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
