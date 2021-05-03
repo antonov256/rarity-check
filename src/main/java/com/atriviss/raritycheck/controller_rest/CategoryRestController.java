@@ -69,7 +69,7 @@ public class CategoryRestController {
 
     @DeleteMapping("/categories/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
