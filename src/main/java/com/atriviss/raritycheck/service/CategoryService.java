@@ -1,19 +1,19 @@
 package com.atriviss.raritycheck.service;
 
 import com.atriviss.raritycheck.dto_api.CategoryApiDto;
-import com.atriviss.raritycheck.dto_api.ItemApiDto;
+import com.atriviss.raritycheck.dto_api.SubcategoryApiDto;
 import com.atriviss.raritycheck.dto_api.mapper.CategoryApiMapper;
 import com.atriviss.raritycheck.dto_jpa.pc_app.CategoryJpaDto;
-import com.atriviss.raritycheck.dto_jpa.pc_app.ItemJpaDto;
 import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.CategoryJpaMapper;
 import com.atriviss.raritycheck.model.Category;
-import com.atriviss.raritycheck.model.Item;
 import com.atriviss.raritycheck.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class CategoryService {
@@ -25,6 +25,9 @@ public class CategoryService {
 
     @Autowired
     private CategoryJpaMapper jpaMapper;
+
+    @Autowired
+    private SubcategoryService subcategoryService;
 
     public Optional<CategoryApiDto> findById(Integer id) {
         Optional<CategoryJpaDto> optionalJpaDto = repository.findById(id);
@@ -39,10 +42,21 @@ public class CategoryService {
         return apiDtoList;
     }
 
+    @Transactional
     public CategoryApiDto create(CategoryApiDto categoryApiDto) {
         CategoryJpaDto jpaDto = jpaMapper.toCategoryJpaDto(apiMapper.toCategory(categoryApiDto));
         CategoryJpaDto savedJpaDto = repository.save(jpaDto);
         CategoryApiDto savedApiDto = apiMapper.toCategoryApiDto(jpaMapper.toCategory(savedJpaDto));
+
+        List<SubcategoryApiDto> subcategories = categoryApiDto.getSubcategories();
+        if(subcategories != null && subcategories.size() != 0) {
+            List<SubcategoryApiDto> savedSubcategories = subcategories.stream()
+                    .peek(s -> s.setCategoryId(savedApiDto.getId()))
+                    .map(subcategoryService::create)
+                    .collect(Collectors.toList());
+
+            savedApiDto.setSubcategories(savedSubcategories);
+        }
 
         return savedApiDto;
     }
