@@ -13,7 +13,7 @@ public class S3ResourceNotFoundExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(S3ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionReport badCredentialsHandler(S3ResourceNotFoundException e) {
+    public ExceptionReport handleException(S3ResourceNotFoundException e) {
         return new ExceptionReport(e);
     }
 }

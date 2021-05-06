@@ -13,7 +13,7 @@ public class SearchQueryAdvice {
     @ResponseBody
     @ExceptionHandler(SearchQueryException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionReport wrongSearchQueryHandler(SearchQueryException e) {
+    public ExceptionReport handleException(SearchQueryException e) {
         return new ExceptionReport(e);
     }
 }

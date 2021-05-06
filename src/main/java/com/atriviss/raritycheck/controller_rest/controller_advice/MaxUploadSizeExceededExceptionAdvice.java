@@ -1,19 +1,19 @@
 package com.atriviss.raritycheck.controller_rest.controller_advice;
 
 import com.atriviss.raritycheck.controller_rest.exception.ExceptionReport;
-import com.atriviss.raritycheck.controller_rest.exception.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
-public class FileUploadExceptionAdvice {
+public class MaxUploadSizeExceededExceptionAdvice {
     @ResponseBody
-    @ExceptionHandler(FileUploadException.class)
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionReport handleException(FileUploadException e) {
-        return new ExceptionReport(e);
+    public ExceptionReport handleException(MaxUploadSizeExceededException e) {
+        return new ExceptionReport(e.getClass().getSimpleName(), "File is too big");
     }
 }

@@ -13,7 +13,7 @@ public class BadCredentialsAdvice {
     @ResponseBody
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ExceptionReport badCredentialsHandler(BadCredentialsException e) {
-        return new ExceptionReport(e);
+    public ExceptionReport handleException(BadCredentialsException e) {
+        return new ExceptionReport(e.getClass().getSimpleName(), "Invalid login/password");
     }
 }

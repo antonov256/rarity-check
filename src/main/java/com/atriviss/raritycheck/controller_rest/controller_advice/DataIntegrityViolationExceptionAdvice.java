@@ -1,7 +1,7 @@
 package com.atriviss.raritycheck.controller_rest.controller_advice;
 
 import com.atriviss.raritycheck.controller_rest.exception.ExceptionReport;
-import com.atriviss.raritycheck.controller_rest.exception.FileUploadException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class FileUploadExceptionAdvice {
+public class DataIntegrityViolationExceptionAdvice {
     @ResponseBody
-    @ExceptionHandler(FileUploadException.class)
+    @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionReport handleException(FileUploadException e) {
-        return new ExceptionReport(e);
+    public ExceptionReport handleException(DataIntegrityViolationException e) {
+        return new ExceptionReport(e.getClass().getSimpleName(),
+                "Unable to perform an operation cause of data constraints (maybe item is already in list)");
     }
 }
