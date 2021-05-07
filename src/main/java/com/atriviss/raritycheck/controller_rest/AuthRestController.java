@@ -42,33 +42,29 @@ public class AuthRestController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationApiDto> login(@RequestBody @Valid UserLoginApiDto loginCredentialsApiDto) {
-        try {
-            Authentication authentication = authenticationManager
-                    .authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    loginCredentialsApiDto.getUsername(), loginCredentialsApiDto.getPassword()
-                            )
-                    );
+        Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                loginCredentialsApiDto.getUsername(), loginCredentialsApiDto.getPassword()
+                        )
+                );
 
-            Object principal = authentication.getPrincipal();
-            if(!(principal instanceof User))
-                throw new BadCredentialsException("Authentication is not User");
+        Object principal = authentication.getPrincipal();
+        if(!(principal instanceof User))
+            throw new BadCredentialsException("Authentication is not User");
 
-            User user = (User) principal;
+        User user = (User) principal;
 
-            String token = jwtTokenUtil.generateAccessToken(user);
-            UserApiDto userApiDto = userApiMapper.toDto(user);
+        String token = jwtTokenUtil.generateAccessToken(user);
+        UserApiDto userApiDto = userApiMapper.toDto(user);
 
-            AuthenticationApiDto authenticationApiDto = new AuthenticationApiDto(token, userApiDto);
+        AuthenticationApiDto authenticationApiDto = new AuthenticationApiDto(token, userApiDto);
 
-            return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            token
-                    )
-                    .body(authenticationApiDto);
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        token
+                )
+                .body(authenticationApiDto);
     }
 }
