@@ -2,14 +2,13 @@ package com.atriviss.raritycheck.controller_rest;
 
 import com.atriviss.raritycheck.controller_rest.exception.InvalidOldPasswordException;
 import com.atriviss.raritycheck.dto_api.ChangePasswordApiDto;
+import com.atriviss.raritycheck.dto_api.ChangeUserProfileApiDto;
+import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.model.User;
 import com.atriviss.raritycheck.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ValidationException;
 import java.security.Principal;
@@ -35,8 +34,17 @@ public class ProfileRestController {
             throw new ValidationException("Passwords don't match!");
         }
 
-        userService.changePassword(user, changePasswordApiDto.getNewPassword());
+        userService.updatePassword(user, changePasswordApiDto.getNewPassword());
 
         return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping("profile")
+    public ResponseEntity<UserApiDto> changeUserProfile(@RequestBody ChangeUserProfileApiDto changeUserProfileApiDto, Principal principal) throws InvalidOldPasswordException {
+        User user = userExtractor.extract(principal);
+        UserApiDto updatedUserApiDto = userService.updateProfile(user, changeUserProfileApiDto);
+
+        return ResponseEntity.ok().body(updatedUserApiDto);
     }
 }

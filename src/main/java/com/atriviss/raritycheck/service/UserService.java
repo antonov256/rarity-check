@@ -1,6 +1,8 @@
 package com.atriviss.raritycheck.service;
 
+import com.atriviss.raritycheck.controller_rest.exception.ResourceNotFoundException;
 import com.atriviss.raritycheck.controller_rest.exception.UserAlreadyExistsException;
+import com.atriviss.raritycheck.dto_api.ChangeUserProfileApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.mapper.UserApiMapper;
@@ -100,7 +102,28 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(User user, String newPassword) {
+    public void updatePassword(User user, String newPassword) {
         repository.updatePassword(user.getId(), passwordEncoder.encode(newPassword));
+    }
+
+    @Transactional
+    public UserApiDto updateProfile(User user, ChangeUserProfileApiDto changeUserProfileApiDto) {
+        UserJpaDto userJpaDtoToUpdate = repository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("user", user.getId()));
+
+        if(changeUserProfileApiDto.getName() != null && !changeUserProfileApiDto.getName().isEmpty())
+            userJpaDtoToUpdate.setName(changeUserProfileApiDto.getName());
+
+        if(changeUserProfileApiDto.getSurname() != null && !changeUserProfileApiDto.getSurname().isEmpty())
+            userJpaDtoToUpdate.setSurname(changeUserProfileApiDto.getSurname());
+
+        if(changeUserProfileApiDto.getEmail() != null && !changeUserProfileApiDto.getEmail().isEmpty())
+            userJpaDtoToUpdate.setEmail(changeUserProfileApiDto.getEmail());
+
+        if(changeUserProfileApiDto.getTimeZone() != null && !changeUserProfileApiDto.getTimeZone().isEmpty())
+            userJpaDtoToUpdate.setTimezone(changeUserProfileApiDto.getTimeZone());
+
+        repository.save(userJpaDtoToUpdate);
+
+        return apiMapper.toDto(jpaMapper.toModel(userJpaDtoToUpdate));
     }
 }
