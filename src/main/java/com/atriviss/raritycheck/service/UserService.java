@@ -94,4 +94,13 @@ public class UserService {
         Optional<UserJpaDto> optionalUserJpaDto = repository.findByUsername(username);
         return optionalUserJpaDto.map(jpaMapper::toModel).map(apiMapper::toDto);
     }
+
+    public boolean checkOldPasswordIsValid(User user, String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    @Transactional
+    public void changePassword(User user, String newPassword) {
+        repository.updatePassword(user.getId(), passwordEncoder.encode(newPassword));
+    }
 }

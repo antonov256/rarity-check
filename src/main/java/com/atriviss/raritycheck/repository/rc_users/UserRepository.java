@@ -19,4 +19,8 @@ public interface UserRepository  extends JpaRepository<UserJpaDto, Integer> {
     @Modifying
     @Query("update UserJpaDto user set user.lastSeen = :lastSeen where user.id = :id")
     int updateLastSeen(@Param("id") Integer id, @Param("lastSeen") OffsetDateTime lastSeen);
+
+    @Modifying
+    @Query("update UserJpaDto user set user.password = :password where user.id = :id")
+    int updatePassword(@Param("id") Integer id, @Param("password") String password);
 }
