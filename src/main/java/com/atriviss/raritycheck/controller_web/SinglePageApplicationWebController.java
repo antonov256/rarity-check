@@ -1,17 +1,13 @@
 package com.atriviss.raritycheck.controller_web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class SinglePageApplicationWebController {
-    @RequestMapping(value = "/{path:[^.]*}")
-    public String otherPages() {
-        return "index.html";
-    }
-
-    @RequestMapping("/")
-    public String home() {
-        return "index.html";
+    @GetMapping("/**/{path:[^\\.]*}/**")
+    public String allPages(@PathVariable String path) {
+        return "forward:/";
     }
 }
