@@ -56,14 +56,18 @@ public class WishListService {
         return wishItemApiMapper.toWishItemApiDto(wishItemJpaMapper.toWishItem(savedWishItemJpaDto));
     }
 
-    public void deleteWishItemById(Integer userId, Integer itemId) {
-        Optional<WishItemJpaDto> optionalWishItemJpaDto = wishItemRepository.findById(itemId);
+    public void deleteWishItemById(Integer userId, Integer wishItemId) {
+        Optional<WishItemJpaDto> optionalWishItemJpaDto = wishItemRepository.findById(wishItemId);
         if(optionalWishItemJpaDto.isPresent()) {
             if(optionalWishItemJpaDto.get().getUserId().equals(userId)){
-                wishItemRepository.deleteById(itemId);
+                wishItemRepository.deleteById(wishItemId);
             } else {
-                throw new OperationDeniedOnResourceException(WishItem.class, HttpMethod.DELETE, itemId);
+                throw new OperationDeniedOnResourceException(WishItem.class, HttpMethod.DELETE, wishItemId);
             }
         }
+    }
+
+    public void deleteWishItemsByItemId(Integer itemId) {
+        List<WishItemJpaDto> deleted = wishItemRepository.deleteByItemId(itemId);
     }
 }

@@ -69,6 +69,11 @@ public class ItemService {
 
     @Autowired
     private PhotoService photoService;
+
+    @Autowired
+    private WishListService wishListService;
+    @Autowired
+    private OwnListService ownListService;
     
 
     public Optional<ItemApiDto> findById(Integer id) {
@@ -166,7 +171,10 @@ public class ItemService {
                 });
     }
 
+    @Transactional
     public void deleteById(Integer id) {
+        wishListService.deleteWishItemsByItemId(id);
+        ownListService.deleteOwnItemsByItemId(id);
         photoService.deleteByItemId(id);
         repository.deleteById(id);
     }

@@ -55,14 +55,18 @@ public class OwnListService {
         return ownItemApiMapper.toOwnItemApiDto(ownItemJpaMapper.toOwnItem(savedOwnItemJpaDto));
     }
 
-    public void deleteOwnItemById(Integer userId, Integer itemId) {
-        Optional<OwnItemJpaDto> optionalOwnItemJpaDto = ownItemRepository.findById(itemId);
+    public void deleteOwnItemById(Integer userId, Integer ownItemId) {
+        Optional<OwnItemJpaDto> optionalOwnItemJpaDto = ownItemRepository.findById(ownItemId);
         if(optionalOwnItemJpaDto.isPresent()) {
             if(optionalOwnItemJpaDto.get().getUserId().equals(userId)){
-                ownItemRepository.deleteById(itemId);
+                ownItemRepository.deleteById(ownItemId);
             } else {
-                throw new OperationDeniedOnResourceException(OwnItem.class, HttpMethod.DELETE, itemId);
+                throw new OperationDeniedOnResourceException(OwnItem.class, HttpMethod.DELETE, ownItemId);
             }
         }
+    }
+
+    public void deleteOwnItemsByItemId(Integer itemId) {
+        List<OwnItemJpaDto> deleted = ownItemRepository.deleteByItemId(itemId);
     }
 }

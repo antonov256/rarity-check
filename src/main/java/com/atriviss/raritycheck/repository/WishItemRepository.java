@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface WishItemRepository extends JpaRepository<WishItemJpaDto, Integer> {
     List<WishItemJpaDto> findAllByUserId(Integer userId);
+
+    List<WishItemJpaDto> deleteByItemId(Integer itemId);
 }

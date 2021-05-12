@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface OwnItemRepository extends JpaRepository<OwnItemJpaDto, Integer> {
     List<OwnItemJpaDto> findAllByUserId(Integer userId);
+
+    List<OwnItemJpaDto> deleteByItemId(Integer itemId);
 }
