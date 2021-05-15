@@ -37,14 +37,14 @@ public class CategoryRestController {
     }
 
     @GetMapping("/categories")
-    public CollectionModel<EntityModel<CategoryApiDto>> all() {
-        List<CategoryApiDto> apiDtoList = service.findAll();
+    public CollectionModel<EntityModel<CategoryApiDto>> all(@RequestParam(required = false) String filter) {
+        List<CategoryApiDto> apiDtoList = service.findAll(filter);
 
         List<EntityModel<CategoryApiDto>> entityModelList = apiDtoList.stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(entityModelList, linkTo(methodOn(CategoryRestController.class).all()).withSelfRel());
+        return CollectionModel.of(entityModelList, linkTo(methodOn(CategoryRestController.class).all(null)).withSelfRel());
     }
 
     @PostMapping("/categories")

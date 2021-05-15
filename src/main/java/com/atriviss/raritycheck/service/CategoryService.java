@@ -36,8 +36,18 @@ public class CategoryService {
         return optionalJpaDto.map(jpaDto -> apiMapper.toCategoryApiDto(jpaMapper.toCategory(jpaDto)));
     }
 
-    public List<CategoryApiDto> findAll() {
-        List<CategoryJpaDto> jpaDtoList = repository.findAll();
+    public List<CategoryApiDto> findAll(String filter) {
+        List<CategoryJpaDto> jpaDtoList;
+        if (filter == null) {
+            jpaDtoList = repository.findAll();
+        } else {
+            if ("notEmpty".equals(filter)) {
+                jpaDtoList = repository.findAllNotEmpty();
+            } else {
+                jpaDtoList = repository.findAll();
+            }
+        }
+
         List<Category> list = jpaMapper.toCategoryList(jpaDtoList);
         List<CategoryApiDto> apiDtoList = apiMapper.toCategoryApiDtoList(list);
 
