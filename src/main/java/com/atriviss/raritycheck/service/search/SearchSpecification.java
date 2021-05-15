@@ -29,11 +29,12 @@ public class SearchSpecification<T> implements Specification<T> {
                 case LESS_THAN_OR_EQUALS:
                     return criteriaBuilder.lessThanOrEqualTo(getPathString(root, criteria.getKey()), criteria.getValue().toString());
                 case LIKE:
-                    if (root.get(criteria.getKey()).getJavaType() == String.class) {
+                    Path<T> path = getPath(root, criteria.getKey());
+                    if (path.getJavaType() == String.class) {
                         String likePattern = "%" + criteria.getValue().toString().toLowerCase() + "%";
-                        return criteriaBuilder.like(criteriaBuilder.lower(getPathString(root, criteria.getKey())), likePattern);
+                        return criteriaBuilder.like(criteriaBuilder.lower((Path<String>) path), likePattern);
                     } else {
-                        return criteriaBuilder.equal(getPath(root, criteria.getKey()), criteria.getValue());
+                        return criteriaBuilder.equal(path, criteria.getValue());
                     }
                 default:
                     throw new SearchQueryException("Wrong criteria operation: " + criteria.getOperation());
@@ -44,10 +45,7 @@ public class SearchSpecification<T> implements Specification<T> {
     }
 
     private Path<String> getPathString(Root<T> root, String attributeName) {
-        Path<String> path = (Path<String>) root;
-        for (String part : attributeName.split("\\.")) {
-            path = path.get(part);
-        }
+        Path<String> path = (Path<String>) getPath(root, attributeName);
         return path;
     }
 
