@@ -15,6 +15,7 @@ import com.atriviss.raritycheck.model.OwnList;
 import com.atriviss.raritycheck.repository.ItemRepository;
 import com.atriviss.raritycheck.repository.OwnItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
@@ -50,9 +51,12 @@ public class OwnListService {
         OwnItemJpaDto ownItemJpaDto = ownItemJpaMapper.toOwnItemJpaDto(ownItemToAdd);
         ownItemJpaDto.setItem(itemJpaDto);
 
-        OwnItemJpaDto savedOwnItemJpaDto = ownItemRepository.save(ownItemJpaDto);
-
-        return ownItemApiMapper.toOwnItemApiDto(ownItemJpaMapper.toOwnItem(savedOwnItemJpaDto));
+        try {
+            OwnItemJpaDto savedOwnItemJpaDto = ownItemRepository.save(ownItemJpaDto);
+            return ownItemApiMapper.toOwnItemApiDto(ownItemJpaMapper.toOwnItem(savedOwnItemJpaDto));
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("Item is already in list");
+        }
     }
 
     public void deleteOwnItemById(Integer userId, Integer ownItemId) {

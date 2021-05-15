@@ -16,6 +16,7 @@ import com.atriviss.raritycheck.model.WishList;
 import com.atriviss.raritycheck.repository.ItemRepository;
 import com.atriviss.raritycheck.repository.WishItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
@@ -51,9 +52,12 @@ public class WishListService {
         WishItemJpaDto wishItemJpaDto = wishItemJpaMapper.toWishItemJpaDto(wishItemToAddToUser);
         wishItemJpaDto.setItem(itemJpaDto);
 
-        WishItemJpaDto savedWishItemJpaDto = wishItemRepository.save(wishItemJpaDto);
-
-        return wishItemApiMapper.toWishItemApiDto(wishItemJpaMapper.toWishItem(savedWishItemJpaDto));
+        try {
+            WishItemJpaDto savedWishItemJpaDto = wishItemRepository.save(wishItemJpaDto);
+            return wishItemApiMapper.toWishItemApiDto(wishItemJpaMapper.toWishItem(savedWishItemJpaDto));
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("Item is already in list");
+        }
     }
 
     public void deleteWishItemById(Integer userId, Integer wishItemId) {

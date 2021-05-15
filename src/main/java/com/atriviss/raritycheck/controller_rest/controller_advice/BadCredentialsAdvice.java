@@ -14,6 +14,6 @@ public class BadCredentialsAdvice {
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionReport handleException(BadCredentialsException e) {
-        return new ExceptionReport(e.getClass().getSimpleName(), "Invalid login/password");
+        return new ExceptionReport(e.getClass().getSimpleName(), "Invalid login/password or access token is invalid or expired");
     }
 }

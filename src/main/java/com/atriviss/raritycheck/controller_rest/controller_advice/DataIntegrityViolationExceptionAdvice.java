@@ -14,7 +14,6 @@ public class DataIntegrityViolationExceptionAdvice {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionReport handleException(DataIntegrityViolationException e) {
-        return new ExceptionReport(e.getClass().getSimpleName(),
-                "Unable to perform an operation cause of data constraints (maybe item is already in list)");
+        return new ExceptionReport(e.getClass().getSimpleName(), e.getMessage());
     }
 }
