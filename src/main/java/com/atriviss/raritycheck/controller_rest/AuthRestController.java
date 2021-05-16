@@ -1,21 +1,19 @@
 package com.atriviss.raritycheck.controller_rest;
 
-import com.atriviss.raritycheck.config.security.JwtTokenUtil;
+import com.atriviss.raritycheck.config.security.SecurityCipher;
 import com.atriviss.raritycheck.dto_api.AuthenticationApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
-import com.atriviss.raritycheck.dto_api.rc_user.mapper.UserApiMapper;
-import com.atriviss.raritycheck.model.User;
 import com.atriviss.raritycheck.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,11 +25,6 @@ public class AuthRestController {
     private UserService userService;
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private UserApiMapper userApiMapper;
-
 
     @PostMapping("/registration")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -40,31 +33,43 @@ public class AuthRestController {
         return createdUser;
     }
 
+    @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthenticationApiDto> refreshToken(
+            @CookieValue(name = "accessToken", required = false) String accessToken,
+            @CookieValue(name = "refreshToken", required = false) String refreshToken) {
+
+        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
+
+        return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationApiDto> login(@RequestBody @Valid UserLoginApiDto loginCredentialsApiDto) {
+    public ResponseEntity<AuthenticationApiDto> login(
+            @CookieValue(name = "accessToken", required = false) String accessToken,
+            @CookieValue(name = "refreshToken", required = false) String refreshToken,
+            @RequestBody @Valid UserLoginApiDto userLoginApiDto) {
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                loginCredentialsApiDto.getUsername(), loginCredentialsApiDto.getPassword()
+                                userLoginApiDto.getUsername(), userLoginApiDto.getPassword()
                         )
                 );
 
-        Object principal = authentication.getPrincipal();
-        if(!(principal instanceof User))
-            throw new BadCredentialsException("Authentication is not User");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User user = (User) principal;
+        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
 
-        String token = jwtTokenUtil.generateAccessToken(user);
-        UserApiDto userApiDto = userApiMapper.toDto(user);
+        ResponseEntity<AuthenticationApiDto> loginResponse = userService.login(userLoginApiDto, decryptedAccessToken, decryptedRefreshToken);
+        return loginResponse;
+    }
 
-        AuthenticationApiDto authenticationApiDto = new AuthenticationApiDto(token, userApiDto);
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseEntity<?> logout = userService.logout();
+        SecurityContextHolder.getContext().setAuthentication(null);
 
-        return ResponseEntity.ok()
-                .header(
-                        HttpHeaders.AUTHORIZATION,
-                        token
-                )
-                .body(authenticationApiDto);
+        return logout;
     }
 }
