@@ -5,6 +5,7 @@ import com.atriviss.raritycheck.dto_api.AuthorizationResponse;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
+import com.atriviss.raritycheck.service.AuthService;
 import com.atriviss.raritycheck.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ public class AuthRestController {
     @Autowired
     private UserService userService;
     @Autowired
+    private AuthService authService;
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/registration")
@@ -41,7 +44,7 @@ public class AuthRestController {
         String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
         String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
 
-        return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
+        return authService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }
 
     @PostMapping("/login")
@@ -61,13 +64,13 @@ public class AuthRestController {
         String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
         String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
 
-        ResponseEntity<AuthorizationResponse> loginResponse = userService.login(userLoginApiDto, decryptedAccessToken, decryptedRefreshToken);
+        ResponseEntity<AuthorizationResponse> loginResponse = authService.login(userLoginApiDto, decryptedAccessToken, decryptedRefreshToken);
         return loginResponse;
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
-        ResponseEntity<?> logout = userService.logout();
+        ResponseEntity<?> logout = authService.logout();
         SecurityContextHolder.getContext().setAuthentication(null);
 
         return logout;
