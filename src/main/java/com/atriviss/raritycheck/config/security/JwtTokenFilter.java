@@ -4,7 +4,9 @@ import com.atriviss.raritycheck.dto_jpa.rc_users.mapper.UserJpaMapper;
 import com.atriviss.raritycheck.repository.rc_users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -40,8 +43,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
         String token = getJwtFromCookie(request);
-        if(token == null)
-            token = getJwtFromAuthorizationHeader(request);
 
         if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
@@ -54,11 +55,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 .map(userJpaMapper::toModel)
                 .orElse(null);
 
-        UsernamePasswordAuthenticationToken
-                usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails, null,
-                userDetails == null ?
-                        new ArrayList<>() : userDetails.getAuthorities()
+        Collection<? extends GrantedAuthority> authorities;
+        if (userDetails != null) {
+            authorities = userDetails.getAuthorities();
+        } else {
+            authorities = new ArrayList<>();
+        }
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                authorities
         );
 
         usernamePasswordAuthenticationToken.setDetails(
@@ -96,7 +103,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromAuthorizationHeader(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         if (StringUtils.hasText(authHeader)) {
             String accessToken;
             if (authHeader.startsWith(BEARER_)) {

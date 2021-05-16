@@ -1,7 +1,7 @@
 package com.atriviss.raritycheck.controller_rest;
 
 import com.atriviss.raritycheck.config.security.SecurityCipher;
-import com.atriviss.raritycheck.dto_api.AuthenticationApiDto;
+import com.atriviss.raritycheck.dto_api.AuthorizationResponse;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
@@ -34,7 +34,7 @@ public class AuthRestController {
     }
 
     @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthenticationApiDto> refreshToken(
+    public ResponseEntity<AuthorizationResponse> refreshToken(
             @CookieValue(name = "accessToken", required = false) String accessToken,
             @CookieValue(name = "refreshToken", required = false) String refreshToken) {
 
@@ -45,7 +45,7 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationApiDto> login(
+    public ResponseEntity<AuthorizationResponse> login(
             @CookieValue(name = "accessToken", required = false) String accessToken,
             @CookieValue(name = "refreshToken", required = false) String refreshToken,
             @RequestBody @Valid UserLoginApiDto userLoginApiDto) {
@@ -61,7 +61,7 @@ public class AuthRestController {
         String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
         String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
 
-        ResponseEntity<AuthenticationApiDto> loginResponse = userService.login(userLoginApiDto, decryptedAccessToken, decryptedRefreshToken);
+        ResponseEntity<AuthorizationResponse> loginResponse = userService.login(userLoginApiDto, decryptedAccessToken, decryptedRefreshToken);
         return loginResponse;
     }
 

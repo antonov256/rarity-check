@@ -2,11 +2,10 @@ package com.atriviss.raritycheck.service;
 
 import com.atriviss.raritycheck.config.security.CookieUtil;
 import com.atriviss.raritycheck.config.security.JwtTokenUtil;
-import com.atriviss.raritycheck.config.security.SecurityCipher;
 import com.atriviss.raritycheck.config.security.Token;
 import com.atriviss.raritycheck.controller_rest.exception.ResourceNotFoundException;
 import com.atriviss.raritycheck.controller_rest.exception.UserAlreadyExistsException;
-import com.atriviss.raritycheck.dto_api.AuthenticationApiDto;
+import com.atriviss.raritycheck.dto_api.AuthorizationResponse;
 import com.atriviss.raritycheck.dto_api.ChangeUserProfileApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
@@ -148,7 +147,7 @@ public class UserService {
         return apiMapper.toDto(jpaMapper.toModel(userJpaDtoToUpdate));
     }
 
-    public ResponseEntity<AuthenticationApiDto> login(UserLoginApiDto userLoginApiDto, String accessToken, String refreshToken) {
+    public ResponseEntity<AuthorizationResponse> login(UserLoginApiDto userLoginApiDto, String accessToken, String refreshToken) {
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -157,61 +156,30 @@ public class UserService {
                 );
 
         Object principal = authentication.getPrincipal();
-        if(!(principal instanceof User))
+        if(!(principal instanceof User)) {
             throw new BadCredentialsException("Authentication is not User");
-
-        User user = (User) principal;
-
-        Boolean accessTokenValid = jwtTokenUtil.validate(accessToken);
-        Boolean refreshTokenValid = jwtTokenUtil.validate(refreshToken);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        Token newAccessToken;
-        Token newRefreshToken;
-
-        if (!accessTokenValid && !refreshTokenValid) {
-            newAccessToken = jwtTokenUtil.generateAccessToken(user);
-            newRefreshToken = jwtTokenUtil.generateRefreshToken(user);
-
-            addAccessTokenCookie(responseHeaders, newAccessToken);
-            addRefreshTokenCookie(responseHeaders, newRefreshToken);
-        } else {
-            if (accessTokenValid && refreshTokenValid) {
-                newAccessToken = jwtTokenUtil.generateAccessToken(user);
-                newRefreshToken = jwtTokenUtil.generateRefreshToken(user);
-
-                addAccessTokenCookie(responseHeaders, newAccessToken);
-                addRefreshTokenCookie(responseHeaders, newRefreshToken);
-            } else {
-                if (!accessTokenValid && refreshTokenValid) {
-                    newAccessToken = jwtTokenUtil.generateAccessToken(user);
-                    newRefreshToken = jwtTokenUtil.generateRefreshToken(user);
-
-                    addAccessTokenCookie(responseHeaders, newAccessToken);
-                    addRefreshTokenCookie(responseHeaders, newRefreshToken);
-                } else {
-                    // only for token in response body
-                    newAccessToken = jwtTokenUtil.generateAccessToken(user);
-                    newRefreshToken = jwtTokenUtil.generateRefreshToken(user);
-
-                    addAccessTokenCookie(responseHeaders, newAccessToken);
-                    addRefreshTokenCookie(responseHeaders, newRefreshToken);
-                }
-            }
         }
 
-        responseHeaders.add(HttpHeaders.AUTHORIZATION, SecurityCipher.encrypt(newAccessToken.getTokenValue()));
+        User user = (User) principal;
+        Token newAccessToken = jwtTokenUtil.generateAccessToken(user);
+        Token newRefreshToken = jwtTokenUtil.generateRefreshToken(user);
 
-        AuthenticationApiDto authenticationApiDto = new AuthenticationApiDto(
-                AuthenticationApiDto.SuccessFailure.SUCCESS,
-                "Auth successful. Tokens are created in cookie.",
-                SecurityCipher.encrypt(newAccessToken.getTokenValue()),
+        HttpHeaders responseHeaders = new HttpHeaders();
+        addAccessTokenCookie(responseHeaders, newAccessToken);
+        addRefreshTokenCookie(responseHeaders, newRefreshToken);
+
+        AuthorizationResponse authorizationResponse = new AuthorizationResponse(
+                AuthorizationResponse.Status.SUCCESS,
+                "Login successful. Tokens are created in cookies.",
                 userApiMapper.toDto(user)
         );
-        return ResponseEntity.ok().headers(responseHeaders).body(authenticationApiDto);
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(authorizationResponse);
     }
 
-    public ResponseEntity<AuthenticationApiDto> refresh(String accessToken, String refreshToken) {
+    public ResponseEntity<AuthorizationResponse> refresh(String accessToken, String refreshToken) {
         Boolean refreshTokenValid = jwtTokenUtil.validate(refreshToken);
         if (!refreshTokenValid) {
             throw new IllegalArgumentException("Refresh Token is invalid!");
@@ -226,19 +194,20 @@ public class UserService {
         }
 
         User user = jpaMapper.toModel(userJpaDtoOptional.get());
-
         Token newAccessToken = jwtTokenUtil.generateAccessToken(user);
+
         HttpHeaders responseHeaders = new HttpHeaders();
         addAccessTokenCookie(responseHeaders, newAccessToken);
 
-        AuthenticationApiDto loginResponse = new AuthenticationApiDto(
-                AuthenticationApiDto.SuccessFailure.SUCCESS,
-                "Auth successful. Tokens are created in cookie.",
-                SecurityCipher.encrypt(newAccessToken.getTokenValue()),
+        AuthorizationResponse loginResponse = new AuthorizationResponse(
+                AuthorizationResponse.Status.SUCCESS,
+                "Refresh access successful. Tokens are created in cookies.",
                 userApiMapper.toDto(user)
         );
 
-        return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(loginResponse);
     }
 
     private void addAccessTokenCookie(HttpHeaders httpHeaders, Token token) {
