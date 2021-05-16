@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -24,9 +26,17 @@ public class FilesRestController {
     @Autowired
     private UserFromPrincipalExtractor userExtractor;
 
+    private List<String> photoFileExtensions = Arrays.asList("png", "jpg", "jpeg", "gif", "tiff", "bmp", "bpg");
+
     @PostMapping("/files")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<EntityModel<S3File>> uploadOne(@RequestParam("file") MultipartFile file, Principal principal) throws IOException, FileUploadException {
+        String originalFilename = file.getOriginalFilename();
+
+        if(originalFilename != null && photoFileExtensions.stream().noneMatch(originalFilename::endsWith)) {
+            throw new FileUploadException("Wrong file name or file extension: " + originalFilename);
+        }
+
         User user = userExtractor.extract(principal);
 
         S3File savedFile = filesService.savePhoto(file, user.getId());
