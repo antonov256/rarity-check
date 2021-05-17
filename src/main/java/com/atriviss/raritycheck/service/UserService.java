@@ -1,6 +1,8 @@
 package com.atriviss.raritycheck.service;
 
+import com.atriviss.raritycheck.controller_rest.exception.ResourceNotFoundException;
 import com.atriviss.raritycheck.controller_rest.exception.UserAlreadyExistsException;
+import com.atriviss.raritycheck.dto_api.ChangeUserProfileApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.mapper.UserApiMapper;
@@ -12,17 +14,23 @@ import com.atriviss.raritycheck.model.UserDetailsContainer;
 import com.atriviss.raritycheck.model.UserToCreate;
 import com.atriviss.raritycheck.repository.rc_users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.TimeZone;
 
 @Service
 public class UserService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository repository;
 
@@ -32,8 +40,8 @@ public class UserService {
     @Autowired
     private UserJpaMapper jpaMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Value("${service.user.last-seen-update-threshold-in-seconds}")
+    private Integer lastSeenUpdateThresholdInSeconds;
 
     @Transactional
     public UserApiDto register(UserRegisterApiDto userRegisterApiDto) throws UserAlreadyExistsException {
@@ -60,7 +68,8 @@ public class UserService {
                 userRegisterApiDto.getName(),
                 userRegisterApiDto.getSurname(),
                 userRegisterApiDto.getEmail(),
-                TimeZone.getTimeZone(userRegisterApiDto.getTimezone())
+                TimeZone.getTimeZone(userRegisterApiDto.getTimezone()),
+                OffsetDateTime.now()
         );
 
         UserJpaDto registeredUserJpaDto = repository.save(jpaMapper.toJpaDto(userToCreate));
@@ -71,6 +80,13 @@ public class UserService {
         return registeredUserApiDto;
     }
 
+    @Transactional
+    public void updateUserLastSeen(User user){
+        Duration duration = Duration.between(user.getLastSeen(), OffsetDateTime.now());
+        if(duration.getSeconds() > lastSeenUpdateThresholdInSeconds)
+            repository.updateLastSeen(user.getId(), OffsetDateTime.now());
+    }
+
     public Optional<UserApiDto> getUserById(Integer id) {
         Optional<UserJpaDto> optionalUserJpaDto = repository.findById(id);
         return optionalUserJpaDto.map(jpaMapper::toModel).map(apiMapper::toDto);
@@ -79,5 +95,35 @@ public class UserService {
     public Optional<UserApiDto> getUserByUsername(String username) {
         Optional<UserJpaDto> optionalUserJpaDto = repository.findByUsername(username);
         return optionalUserJpaDto.map(jpaMapper::toModel).map(apiMapper::toDto);
+    }
+
+    public boolean checkOldPasswordIsValid(User user, String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    @Transactional
+    public void updatePassword(User user, String newPassword) {
+        repository.updatePassword(user.getId(), passwordEncoder.encode(newPassword));
+    }
+
+    @Transactional
+    public UserApiDto updateProfile(User user, ChangeUserProfileApiDto changeUserProfileApiDto) {
+        UserJpaDto userJpaDtoToUpdate = repository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("user", user.getId()));
+
+        if(changeUserProfileApiDto.getName() != null && !changeUserProfileApiDto.getName().isEmpty())
+            userJpaDtoToUpdate.setName(changeUserProfileApiDto.getName());
+
+        if(changeUserProfileApiDto.getSurname() != null && !changeUserProfileApiDto.getSurname().isEmpty())
+            userJpaDtoToUpdate.setSurname(changeUserProfileApiDto.getSurname());
+
+        if(changeUserProfileApiDto.getEmail() != null && !changeUserProfileApiDto.getEmail().isEmpty())
+            userJpaDtoToUpdate.setEmail(changeUserProfileApiDto.getEmail());
+
+        if(changeUserProfileApiDto.getTimeZone() != null && !changeUserProfileApiDto.getTimeZone().isEmpty())
+            userJpaDtoToUpdate.setTimezone(changeUserProfileApiDto.getTimeZone());
+
+        repository.save(userJpaDtoToUpdate);
+
+        return apiMapper.toDto(jpaMapper.toModel(userJpaDtoToUpdate));
     }
 }

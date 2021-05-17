@@ -11,8 +11,8 @@ import javax.persistence.*;
 @EqualsAndHashCode
 public class WishItemJpaDto {
     private Integer id;
-    private Integer itemId;
     private Integer userId;
+    private ItemJpaDto item;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,10 @@ public class WishItemJpaDto {
         return id;
     }
 
-    @Basic
-    @Column(name = "item_id", nullable = false)
-    public Integer getItemId() {
-        return itemId;
+    @ManyToOne
+    @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false)
+    public ItemJpaDto getItem() {
+        return item;
     }
 
     @Basic

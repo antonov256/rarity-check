@@ -1,5 +1,6 @@
 package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
 
+import com.atriviss.raritycheck.dto_api.to_create.PhotoToCreate;
 import com.atriviss.raritycheck.dto_jpa.pc_app.PhotoJpaDto;
 import com.atriviss.raritycheck.model.Photo;
 import org.mapstruct.Mapper;
@@ -12,7 +13,11 @@ public interface PhotoJpaMapper {
 
     PhotoJpaDto toPhotoJpaDto(Photo photo);
 
+    PhotoJpaDto toPhotoJpaDto(PhotoToCreate photoToCreate);
+
     List<Photo> toPhotoList (List<PhotoJpaDto> photoJpaDtos);
 
     List<PhotoJpaDto> toPhotoJpaDtoList (List<Photo> photos);
+
+    List<PhotoJpaDto> toPhotoJpaDtoListFromPhotoToCreateList(List<PhotoToCreate> photoToCreateList);
 }

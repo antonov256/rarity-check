@@ -1,6 +1,6 @@
 package com.atriviss.raritycheck.controller_rest.model_assembler;
 
-import com.atriviss.raritycheck.controller_rest.ItemRestController;
+import com.atriviss.raritycheck.controller_rest.ItemsRestController;
 import com.atriviss.raritycheck.dto_api.ItemApiDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
@@ -16,13 +16,13 @@ public class ItemModelAssembler implements SimpleRepresentationModelAssembler<It
     @Override
     public void addLinks(EntityModel<ItemApiDto> resource) {
         if (resource.getContent() != null)
-            resource.add(linkTo(methodOn(ItemRestController.class).one(resource.getContent().getId())).withSelfRel());
+            resource.add(linkTo(methodOn(ItemsRestController.class).one(resource.getContent().getId())).withSelfRel());
 
-        resource.add(linkTo(methodOn(ItemRestController.class).all(Pageable.unpaged())).withRel("items"));
+        resource.add(linkTo(methodOn(ItemsRestController.class).all(null, Pageable.unpaged())).withRel("items"));
     }
 
     @Override
     public void addLinks(CollectionModel<EntityModel<ItemApiDto>> resources) {
-        resources.add(linkTo(methodOn(ItemRestController.class).all(Pageable.unpaged())).withRel("items"));
+        resources.add(linkTo(methodOn(ItemsRestController.class).all(null, Pageable.unpaged())).withRel("items"));
     }
 }

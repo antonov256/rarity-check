@@ -15,6 +15,6 @@ public class CategoryModelAssembler  implements RepresentationModelAssembler<Cat
     public EntityModel<CategoryApiDto> toModel(CategoryApiDto apiDto) {
         return EntityModel.of(apiDto,
                 linkTo(methodOn(CategoryRestController.class).one(apiDto.getId())).withSelfRel(),
-                linkTo(methodOn(CategoryRestController.class).all()).withRel("categories"));
+                linkTo(methodOn(CategoryRestController.class).all(null)).withRel("categories"));
     }
 }

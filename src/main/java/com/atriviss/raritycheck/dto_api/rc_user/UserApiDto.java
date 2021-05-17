@@ -3,6 +3,8 @@ package com.atriviss.raritycheck.dto_api.rc_user;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 public class UserApiDto {
@@ -13,6 +15,7 @@ public class UserApiDto {
     private String surname;
     private String email;
     private String timezone;
+    private OffsetDateTime lastSeen;
 
     private String authorities;
     private Boolean accountNonExpired;

@@ -14,8 +14,7 @@ public class ItemJpaDto {
     private Integer id;
     private String title;
     private String description;
-    private CategoryJpaDto category;
-    private SubcategoryJpaDto subcategory;
+    private ClassificationJpaDto classification;
     private QualityJpaDto quality;
 
     private List<PhotoJpaDto> photos;
@@ -40,16 +39,9 @@ public class ItemJpaDto {
         return description;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
-    public CategoryJpaDto getCategory() {
-        return category;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "subcategory_id", referencedColumnName = "id", nullable = false)
-    public SubcategoryJpaDto getSubcategory() {
-        return subcategory;
+    @Embedded
+    public ClassificationJpaDto getClassification() {
+        return classification;
     }
 
     @Embedded

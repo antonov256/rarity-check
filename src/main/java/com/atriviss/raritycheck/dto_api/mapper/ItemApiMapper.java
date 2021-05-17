@@ -3,6 +3,7 @@ package com.atriviss.raritycheck.dto_api.mapper;
 import com.atriviss.raritycheck.dto_api.ItemApiDto;
 import com.atriviss.raritycheck.dto_api.PhotoApiDto;
 import com.atriviss.raritycheck.dto_api.VideoApiDto;
+import com.atriviss.raritycheck.dto_api.to_create.ItemToCreate;
 import com.atriviss.raritycheck.model.Item;
 import com.atriviss.raritycheck.model.Photo;
 import com.atriviss.raritycheck.model.Video;
@@ -22,4 +23,6 @@ public interface ItemApiMapper {
     List<Item> toItemList(List<ItemApiDto> itemApiDtos);
 
     List<ItemApiDto> toItemApiDtoList(List<Item> items);
+
+    Item toItem(ItemToCreate itemToCreate);
 }

@@ -2,36 +2,62 @@ package com.atriviss.raritycheck.config.security;
 
 import com.atriviss.raritycheck.model.User;
 import io.jsonwebtoken.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class JwtTokenUtil {
-    private final String jwtSecret = "zdtlD3JK56m6wTTgsNFhqzjqP";
-    private final String jwtIssuer = "com.atriviss.raritycheck";
+    @Value("${auth.jwtSecret}")
+    private String jwtSecret;
 
-    public String generateAccessToken(User user) {
-        return Jwts.builder()
-                .setSubject(String.format("%s,%s", user.getId(), user.getUsername()))
-                .setIssuer(jwtIssuer)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 1 week
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+    @Value("${auth.jwtIssuer}")
+    private String jwtIssuer;
+
+    @Value("${auth.accessTokenExpirationMs}")
+    private Long accessTokenExpirationMs;
+
+    @Value("${auth.refreshTokenExpirationMs}")
+    private Long refreshTokenExpirationMs;
+
+    public Token generateAccessToken(User user) {
+        return generateToken(user, accessTokenExpirationMs);
     }
 
-    public String getUserId(String token) {
+    public Token generateRefreshToken(User user) {
+        return generateToken(user, refreshTokenExpirationMs);
+    }
+
+    private Token generateToken(User user, Long tokenExpirationMs) {
+        Date now = new Date();
+        Long duration = now.getTime() + tokenExpirationMs;
+        Date expiryDate = new Date(duration);
+
+        String token = Jwts.builder()
+                .setSubject(String.format("%s,%s", user.getId(), user.getUsername()))
+                .setIssuer(jwtIssuer)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+
+        return new Token(Token.TokenType.REFRESH, token, duration, LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault()));
+    }
+
+    public Integer getUserId(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject().split(",")[0];
+        String userIdStr = claims.getSubject().split(",")[0];
+
+        return Integer.valueOf(userIdStr);
     }
 
     public String getUsername(String token) {
@@ -40,7 +66,9 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject().split(",")[1];
+        String username = claims.getSubject().split(",")[1];
+
+        return username;
     }
 
     public Date getExpirationDate(String token) {
@@ -53,6 +81,11 @@ public class JwtTokenUtil {
     }
 
     public boolean validate(String token) {
+        if(token == null) {
+            log.error("Token = null");
+            return false;
+        }
+
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;

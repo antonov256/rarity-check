@@ -1,20 +1,20 @@
 package com.atriviss.raritycheck.controller_rest;
 
-import com.atriviss.raritycheck.config.security.JwtTokenUtil;
+import com.atriviss.raritycheck.config.security.SecurityCipher;
+import com.atriviss.raritycheck.dto_api.AuthorizationResponse;
 import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserRegisterApiDto;
-import com.atriviss.raritycheck.dto_api.rc_user.mapper.UserApiMapper;
-import com.atriviss.raritycheck.model.User;
+import com.atriviss.raritycheck.service.AuthService;
 import com.atriviss.raritycheck.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,40 +25,54 @@ public class AuthRestController {
     @Autowired
     private UserService userService;
     @Autowired
+    private AuthService authService;
+    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private UserApiMapper userApiMapper;
 
-
-    @PutMapping("/registration")
+    @PostMapping("/registration")
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserApiDto registerUser(@RequestBody UserRegisterApiDto userRegisterApiDto) {
         UserApiDto createdUser = userService.register(userRegisterApiDto);
         return createdUser;
     }
 
+    @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthorizationResponse> refreshToken(
+            @CookieValue(name = "accessToken", required = false) String accessToken,
+            @CookieValue(name = "refreshToken", required = false) String refreshToken) {
+
+        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
+
+        return authService.refresh(decryptedAccessToken, decryptedRefreshToken);
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<UserApiDto> login(@RequestBody @Valid UserLoginApiDto loginCredentialsApiDto) {
-        try {
-            Authentication authenticate = authenticationManager
-                    .authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    loginCredentialsApiDto.getUsername(), loginCredentialsApiDto.getPassword()
-                            )
-                    );
+    public ResponseEntity<AuthorizationResponse> login(
+            @CookieValue(name = "accessToken", required = false) String accessToken,
+            @CookieValue(name = "refreshToken", required = false) String refreshToken,
+            @RequestBody @Valid UserLoginApiDto userLoginApiDto) {
+        Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                userLoginApiDto.getUsername(), userLoginApiDto.getPassword()
+                        )
+                );
 
-            User user = (User) authenticate.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            jwtTokenUtil.generateAccessToken(user)
-                    )
-                    .body(userApiMapper.toDto(user));
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
+
+        ResponseEntity<AuthorizationResponse> loginResponse = authService.login(userLoginApiDto, decryptedAccessToken, decryptedRefreshToken);
+        return loginResponse;
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseEntity<?> logout = authService.logout();
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        return logout;
     }
 }
