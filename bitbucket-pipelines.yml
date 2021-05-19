@@ -20,7 +20,6 @@ pipelines:
           script:
             - cd src/main/resources
             - mkdir static
-            - ls -la
             - cd ../../../
             - cd frontend_sources
             - npm install
@@ -32,9 +31,6 @@ pipelines:
           caches:
             - gradle
           script:
-            - cd src/main/resources/static
-            - ls -la
-            - cd ../../../../
             - gradle build
             - ls ./
             - ls -l ./build/libs/
