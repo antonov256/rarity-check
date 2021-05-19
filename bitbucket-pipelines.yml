@@ -24,7 +24,7 @@ pipelines:
             - cd ../../../
             - cd frontend_sources
             - npm install
-            - npm run build
+            - npm run build-prod
           artifacts: 
             - src/main/resources/static/**
       - step:
