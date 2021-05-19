@@ -55,4 +55,4 @@ pipelines:
                 ENVIRONMENT_NAME: "Raritycheck-env"
                 APPLICATION_NAME: "RarityCheck"
                 ZIP_FILE: "raritycheck.jar"
-                S3_BUCKET: 'elasticbeanstalk-eu-central-1-916378583184'
+                S3_BUCKET: 'raritycheck-dev'
