@@ -18,6 +18,10 @@ pipelines:
           name: Build frontend
           image: node:10.15.3
           script:
+            - cd src/main/resources
+            - mkdir static
+            - ls -la
+            - cd ../../../
             - cd frontend_sources
             - npm install
             - npm run build
