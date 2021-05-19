@@ -25,6 +25,8 @@ pipelines:
             - cd frontend_sources
             - npm install
             - npm run build
+            artifacts: 
+              - src/main/resources/static/**
       - step:
           name: Build and Test
           caches:
