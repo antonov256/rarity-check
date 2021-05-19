@@ -40,7 +40,7 @@ pipelines:
     master:
       - step:
           name: Build and Test
-         caches:
+          caches:
             - gradle
             - node
           script:
