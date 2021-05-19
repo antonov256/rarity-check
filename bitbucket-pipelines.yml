@@ -27,6 +27,10 @@ pipelines:
             - gradle
           script:
             - gradle build
+            - ls ./
+            - ls -l ./build/libs/
+            - mv ./build/libs/*.jar ./raritycheck.jar
+            - ls ./
           artifacts: 
             - 'raritycheck.jar'
       - step:
