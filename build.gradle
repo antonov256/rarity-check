@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.atriviss'
 version = '0.9'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 configurations {
     compileOnly {
