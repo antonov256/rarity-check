@@ -10,6 +10,7 @@
 
 
 image: gradle:6.7.0-jdk11
+image: node:10.15.3
 
 pipelines:
   default:
@@ -18,11 +19,12 @@ pipelines:
           name: Build and Test
           caches:
             - gradle
+            - node
           script:
-            - echo %JAVA_HOME%
-            - gradle --version
+            - cd frontend_sources
+            - npm run build
+            - cd ..
             - gradle build
-            - ls ./
           after-script:
             - pipe: atlassian/checkstyle-report:0.2.0
               variables:
@@ -38,17 +40,14 @@ pipelines:
     master:
       - step:
           name: Build and Test
-          caches:
+         caches:
             - gradle
+            - node
           script:
-            - echo %JAVA_HOME%
-            - gradle --version
+            - cd frontend_sources
+            - npm run build
+            - cd ..
             - gradle build
-            #- ./gradlew clean build
-            - ls ./
-            - ls -l ./build/libs/
-            - mv ./build/libs/*.jar ./raritycheck.jar
-            - ls ./
           artifacts: 
             - 'raritycheck.jar'
       - step:
