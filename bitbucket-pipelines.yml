@@ -9,7 +9,7 @@
 
 
 
-image: gradle:jdk11
+image: gradle:6.7.0
 
 pipelines:
   default:
