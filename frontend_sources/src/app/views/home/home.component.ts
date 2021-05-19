@@ -1,8 +1,12 @@
 import { Component, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
 
-import { CategoriesService } from "./../../services/categories.service";
-import { IItem } from 'src/app/models';
+import { CategoriesService } from "src/app/services/api/categories.service";
+import { ItemsService } from "src/app/services/api/items.service";
+import { DrawerService } from "src/app/services/drawer.service";
+import { LoaderService } from "src/app/services/loader.service";
 
+import { IItem, ICategory, IAPIParams } from "src/app/models";
 
 @Component({
   selector: "app-home",
@@ -10,57 +14,59 @@ import { IItem } from 'src/app/models';
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  constructor(public _categoriesService: CategoriesService) {}
-  categories: any[] = [
-    { value: "steak-0", viewValue: "Steak" },
-    { value: "pizza-1", viewValue: "Pizza" },
-    { value: "tacos-2", viewValue: "Tacos" },
-  ];
+  constructor(
+    public drawerService: DrawerService,
+    public categoriesService: CategoriesService,
+    private itemsService: ItemsService,
+    public loaderService: LoaderService
+  ) {}
+  categories: ICategory[] = [];
+  items: IItem[] = [];
+  sections: any[] = [];
 
-  sections: any[] = [
-    {
-      title: 'Special offer',
-      items: []
-    },
-    {
-      title: 'Abbasids',
-      items: []
-    }
-  ]
+  filterChanged = new Subject<IAPIParams>();
 
-  mocCardConstructor(id: number) : IItem{
-    return {
-      id: id,
-      title: 'Coin',
-      description: 'megasupercoin',
-      category: '',
-      subcategory: '',
-      qualityValue: 1,
-      photos: [
-        './../../../assets/img/placeimg_640_480_tech.jpg'
-      ],
-    }
+  isSearch = false;
+  searchString = "";
+  searchCategory?: number;
+  searchPageSize = 20;
+  searchParams: IAPIParams;
+
+  searchedItems: IItem[] = [];
+
+  checkIsSearch() {
+    return this.isSearch;
   }
 
+  async ngOnInit(): Promise<void> {
+    this.categories = await this.categoriesService.getNotEmpty();
+    // TODO: Uncomment it to get non empty categories
+    // this.items = await this.itemsService.getAll();
 
+    this.sections = this.categories.map((category) => ({
+      id: category.id,
+      title: category.name,
+      items: [...this.items.filter((item) => item.classification.category.id === category.id)],
+    }));
 
-  ngOnInit(): void{
-    this.sections[0].items.push(
-      this.mocCardConstructor(1),
-      this.mocCardConstructor(2),
-      this.mocCardConstructor(3),
-      this.mocCardConstructor(4),
-      this.mocCardConstructor(5),
-      this.mocCardConstructor(6)
-    );
+    // TODO: Uncomment it to get non empty categories
+    // this.sections = this.sections.filter((category) => category.items.length);
+  }
 
-    this.sections[1].items.push(
-      this.mocCardConstructor(1),
-      this.mocCardConstructor(2),
-      this.mocCardConstructor(3),
-      this.mocCardConstructor(4),
-      this.mocCardConstructor(5),
-      this.mocCardConstructor(6)
-    );
+  searchItems(): void {
+    this.searchParams = {
+      pageSize: this.searchPageSize,
+    };
+
+    if (this.searchString) {
+      this.searchParams.title = this.searchString;
+    }
+
+    if (this.searchCategory?.toString() || this.searchCategory == null) {
+      this.searchParams.categoryId = this.searchCategory;
+    }
+
+    this.isSearch = true;
+    this.filterChanged.next(this.searchParams);
   }
 }

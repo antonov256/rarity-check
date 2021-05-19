@@ -1,12 +1,8 @@
-<mat-card routerLink="/item-page">
+<mat-card [routerLink]="'/item/' + item.id" class="default-card">
   <mat-card-header>
     <mat-card-title>{{ item.title }}</mat-card-title>
   </mat-card-header>
-  <img
-    mat-card-image
-    [src]="item.photos[0]"
-    alt="Item photo"
-  />
+  <img mat-card-image class="default-card__image" [src]="previewImage" alt="Item photo" />
   <mat-card-content>
     <p>
       {{ item.description }}

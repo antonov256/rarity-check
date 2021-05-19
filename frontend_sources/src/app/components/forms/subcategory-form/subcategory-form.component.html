@@ -1,0 +1,51 @@
+<mat-card class="subcategory-form">
+  <mat-card-header>
+    <mat-card-title>{{ isEdit ? "Edit subcategory form" : "Create subcategory form" }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <div>
+        <mat-form-field appearance="outline" class="subcategory-form__input">
+          <mat-label>Name</mat-label>
+          <input matInput required placeholder="Enter subcategory-form title" formControlName="name" />
+          <mat-error>Name should be entered</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="home__search-select">
+          <mat-label>Parent category</mat-label>
+          <mat-select required placeholder="Select parent category" formControlName="parentCategory">
+            <mat-option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Parent category should be selected</mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <div class="subcategory-form__flex subcategory-form__flex_buttons">
+      <button class="subcategory-form__button_cancel" mat-stroked-button color="primary" (click)="goBack()">
+        Cancel
+      </button>
+      <button
+        *ngIf="isEdit"
+        class="subcategory-form__button_save"
+        mat-flat-button
+        color="warn"
+        (click)="confirmDeleteAction()"
+      >
+        Delete
+      </button>
+      <button
+        class="subcategory-form__button_save"
+        mat-flat-button
+        color="primary"
+        [disabled]="form.invalid"
+        (click)="saveSubcategory()"
+      >
+        {{ isEdit ? "Save" : "Create" }}
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,39 +1,41 @@
-import { NotificationsService } from './notification.service';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry, finalize } from 'rxjs/operators';
+import { LoaderService } from "./loader.service";
+import { NotificationsService } from "./notification.service";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable, throwError } from "rxjs";
+import { catchError, finalize } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class CustomInterceptorService implements HttpInterceptor {
+  constructor(private notificationsService: NotificationsService, private loaderService: LoaderService) {}
 
-  loading: boolean = false;
+  activeRequests = 0;
 
-  constructor(private notificationsService: NotificationsService) { }
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (this.activeRequests === 0) {
+      this.loaderService.startLoading();
+    }
+    this.activeRequests++;
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
     const authReq = req.clone({
-      headers: req.headers.set('Session', '123456789'),
+      withCredentials: true,
     });
-
-    this.loading = true;
 
     return next.handle(authReq).pipe(
       catchError((err: HttpErrorResponse) => {
-        this.notificationsService.openSnackBar('Request error');
+        this.notificationsService.openSnackBar(err.error.message || "Request error");
         return throwError(err);
       }),
       finalize(() => {
-        this.loading = false;
+        this.activeRequests--;
+        if (this.activeRequests === 0) {
+          this.loaderService.stopLoading();
+        }
         const profilingMessage = `${req.method} - "${req.urlWithParams}"`;
         console.log(profilingMessage);
       })
-    )
+    );
   }
-
 }

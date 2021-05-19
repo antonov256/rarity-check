@@ -1,8 +1,47 @@
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 .content {
+  position: relative;
   flex: 1 1 auto;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+
+  &__wrapper {
+    flex: 1 1 auto;
+  }
+}
+
+.loader {
+  top: 64px;
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 64px);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.drawler {
+  position: fixed;
+  height: 100%;
+  width: 20%;
+
+  @mixin hover($color) {
+    &:hover {
+      cursor: pointer;
+      background: $color;
+    }
+  }
+
+  &__category {
+    @include hover(#ff9800);
+  }
+
+  &__subcategory {
+    @include hover(#ff9800);
+    line-height: 30px;
+  }
 }

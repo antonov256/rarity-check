@@ -1,14 +1,12 @@
 <div class="profile container">
-  <h1 headline>Jhon Bllaskovich</h1>
+  <h1 headline>{{ sessionService.userData.name }} {{ sessionService.userData.surname }}</h1>
   <div class="profile__links">
     <mat-card>
       <mat-card-header>
         <mat-card-title> Wish List </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <button mat-button color="primary" routerLink="/portfolio">
-          Go to
-        </button>
+        <button mat-button color="primary" routerLink="/portfolio">Go to</button>
       </mat-card-content>
     </mat-card>
     <mat-card>
@@ -16,27 +14,37 @@
         <mat-card-title> Own List </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <button mat-button color="primary" routerLink="/portfolio">
-          Go to
-        </button>
+        <button mat-button color="primary" routerLink="/portfolio">Go to</button>
       </mat-card-content>
     </mat-card>
   </div>
-  <form class="profile__form">
+  <form class="profile__form" [formGroup]="dataForm">
     <h2 class="profile__subtitle" title>Edit profile</h2>
     <mat-form-field class="profile__input">
-      <mat-label>Username</mat-label>
-      <input matInput required placeholder="test@example.com" [formControl]="newEmail" type="email" />
-      <mat-error *ngIf="newEmail.invalid">{{getEmailErrorMessage()}}</mat-error>
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Enter new name" formControlName="name" type="text" />
+      <mat-error *ngIf="dataForm.controls['name'].invalid">{{ getNameErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="profile__input">
-      <mat-label>Phone number</mat-label>
-      <input matInput required placeholder="88005553535" [formControl]="phone" type="tel" />
-      <mat-error *ngIf="phone.invalid">{{getPhoneErrorMessage()}}</mat-error>
+      <mat-label>Surname</mat-label>
+      <input matInput placeholder="Enter new surname" formControlName="surname" type="text" />
+      <mat-error *ngIf="dataForm.controls['surname'].invalid">{{ getSurnameErrorMessage() }}</mat-error>
     </mat-form-field>
-    <button mat-flat-button color="primary" (click)="saveHandler()">Save</button>
+    <!-- <mat-form-field class="profile__input">
+      <mat-label>Username</mat-label>
+      <input matInput required placeholder="Enter new username" formControlName="username" type="text" />
+      <mat-error *ngIf="dataForm.controls['username'].invalid">{{ getUsernameErrorMessage() }}</mat-error>
+    </mat-form-field> -->
+    <!-- <mat-form-field class="profile__input">
+      <mat-label>Phone number</mat-label>
+      <input matInput placeholder="88005553535" formControlName="phone" type="tel" />
+      <mat-error *ngIf="dataForm.controls['phone'].invalid">{{ getPhoneErrorMessage() }}</mat-error>
+    </mat-form-field> -->
+    <button mat-flat-button color="primary" (click)="saveHandler()" [disabled]="dataForm.invalid || !dataForm.touched">
+      Save
+    </button>
   </form>
-  <form class="profile__form">
+  <form class="profile__form" [formGroup]="passwordForm">
     <h2 class="profile__subtitle">Change password</h2>
     <mat-form-field class="profile__input">
       <mat-label>Old Password</mat-label>
@@ -45,6 +53,7 @@
         [type]="hidePassword ? 'password' : 'text'"
         autocomplete
         required
+        formControlName="oldPassword"
         name="password"
       />
       <button
@@ -55,32 +64,31 @@
         [attr.aria-pressed]="hidePassword"
         type="button"
       >
-        <mat-icon>{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
+      <mat-error *ngIf="passwordForm.controls['oldPassword'].invalid">{{ getOldPasswordErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="profile__input">
       <mat-label>New Password</mat-label>
       <input
         matInput
-        [type]="hidePassword ? 'password' : 'text'"
+        [type]="hideNewPassword ? 'password' : 'text'"
         autocomplete
         required
+        formControlName="newPassword"
         name="password"
       />
       <button
         mat-icon-button
         matSuffix
-        (click)="hidePassword = !hidePassword"
+        (click)="hideNewPassword = !hideNewPassword"
         [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hidePassword"
+        [attr.aria-pressed]="hideNewPassword"
         type="button"
       >
-        <mat-icon>{{
-          hidePassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        <mat-icon>{{ hideNewPassword ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
+      <mat-error *ngIf="passwordForm.controls['newPassword'].invalid">{{ getNewPasswordErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="profile__input">
       <mat-label>Repeat New Password</mat-label>
@@ -89,6 +97,7 @@
         [type]="hidePasswordRepeat ? 'password' : 'text'"
         autocomplete
         required
+        formControlName="newPasswordRepeat"
         name="password"
       />
       <button
@@ -99,11 +108,14 @@
         [attr.aria-pressed]="hidePasswordRepeat"
         type="button"
       >
-        <mat-icon>{{
-          hidePasswordRepeat ? "visibility_off" : "visibility"
-        }}</mat-icon>
+        <mat-icon>{{ hidePasswordRepeat ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
+      <mat-error *ngIf="passwordForm.controls['newPasswordRepeat'].invalid || passwordForm.invalid">{{
+        getNewPasswordRepeatErrorMessage()
+      }}</mat-error>
     </mat-form-field>
   </form>
-  <button mat-flat-button color="primary">Change</button>
+  <button mat-flat-button color="primary" [disabled]="passwordForm.invalid" (click)="changePassword()">
+    Change password
+  </button>
 </div>

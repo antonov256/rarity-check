@@ -1,3 +1,42 @@
-.category-tree{
+.category-tree {
   padding-bottom: 30px;
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 10px;
+
+    button {
+      margin: 0;
+    }
+  }
+
+  .subcategory {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px;
+    padding: 1rem;
+
+    p {
+      margin: 0;
+      cursor: default;
+    }
+
+    &:hover {
+      background: rgba(#000, 0.1);
+    }
+
+    &__buttons {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      * {
+        cursor: pointer;
+      }
+    }
+  }
 }

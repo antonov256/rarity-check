@@ -1,0 +1,28 @@
+<div class="home__section">
+  <h2>{{ title }}</h2>
+  <div class="home__grid" *ngIf="items?.length || pagesStore[pageIndex]?.length">
+    <ng-container *ngIf="type === 'default'">
+      <app-card-default *ngFor="let item of actualItems" [item]="item"></app-card-default>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'wish'">
+      <app-card-wish
+        *ngFor="let item of actualItems"
+        [wishItem]="item"
+        (itemDeleted)="removeItem($event)"
+      ></app-card-wish>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'own'">
+      <app-card-own *ngFor="let item of actualItems" [ownItem]="item" (itemDeleted)="removeItem($event)"></app-card-own>
+    </ng-container>
+  </div>
+  <mat-paginator
+    *ngIf="items?.length || pagesStore[pageIndex]?.length"
+    [length]="items?.length || actualLength"
+    [pageSize]="pageSize"
+    (page)="onPageEvent($event)"
+  ></mat-paginator>
+
+  <p *ngIf="!items?.length && !pagesStore[pageIndex]?.length">There is no items!</p>
+</div>

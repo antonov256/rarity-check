@@ -1,0 +1,52 @@
+<div class="item-page" *ngIf="itemData">
+  <div class="item-page__top">
+    <div class="item-page__img">
+      <img [src]="previewImage" alt="Item preview image" />
+    </div>
+    <div class="item-page__right">
+      <h1 class="item-page__title">{{ itemData.title }}</h1>
+      <div class="item-page__desc">
+        <div class="item-page__actions">
+          <ng-container *ngIf="sessionService.isAuthroized">
+            <ng-container *ngIf="!sessionService.isAdmin">
+              <button *ngIf="!inWishList && !isWishDone" mat-flat-button color="primary" (click)="addToWishList()">
+                <mat-icon>add</mat-icon>
+                Add to Wishlist
+              </button>
+              <button *ngIf="inWishList && !isWishDone" mat-flat-button color="primary" (click)="removeFromWishList()">
+                <mat-icon>remove</mat-icon>
+                Remove from Wishlist
+              </button>
+              <button *ngIf="isWishDone" mat-stroked-button color="accent" (click)="toggleDone('wish')">
+                <mat-icon>done</mat-icon>
+                Done
+              </button>
+              <button *ngIf="!inOwnList && !isOwnDone" mat-flat-button color="accent" (click)="addToOwnList()">
+                <mat-icon>add</mat-icon>
+                Add to Ownlist
+              </button>
+              <button *ngIf="isOwnDone" mat-stroked-button color="accent" (click)="toggleDone('own')">
+                <mat-icon>done</mat-icon>
+                Done
+              </button>
+              <button *ngIf="inOwnList && !isOwnDone" mat-flat-button color="accent" (click)="removeFromOwnList()">
+                <mat-icon>remove</mat-icon>
+                Remove from Ownlist
+              </button>
+            </ng-container>
+            <ng-container *ngIf="sessionService.isAdmin">
+              <button mat-flat-button color="warn" [routerLink]="'/item/edit/' + itemId">
+                <mat-icon>edit</mat-icon>
+                Edit item
+              </button>
+            </ng-container>
+          </ng-container>
+        </div>
+        <h2>Description</h2>
+        <p>
+          {{ itemData.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

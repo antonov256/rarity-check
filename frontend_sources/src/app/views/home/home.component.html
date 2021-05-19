@@ -4,33 +4,24 @@
       <form class="home__search" ngNativeValidate>
         <mat-form-field appearance="outline" class="home__search-field">
           <mat-label>Search</mat-label>
-          <input
-            required
-            matInput
-            placeholder="Czechoslovakia Dukat 1933 Coin"
-          />
+          <input matInput placeholder="Czechoslovakia Dukat 1933 Coin" [(ngModel)]="searchString" name="searchString" />
           <button mat-icon-button matSuffix>
             <mat-icon>search</mat-icon>
           </button>
         </mat-form-field>
         <mat-form-field appearance="outline" class="home__search-select">
           <mat-label>All categories</mat-label>
-          <mat-select>
-            <mat-option *ngFor="let cat of categories" [value]="cat.value">
-              {{ cat.viewValue }}
+          <mat-select [(ngModel)]="searchCategory" name="searchCategory">
+            <mat-option [value]="null">All categories</mat-option>
+            <mat-option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <button mat-flat-button class="home__search-submit" color="primary">
-          Search
-        </button>
+        <button mat-flat-button class="home__search-submit" color="primary" (click)="searchItems()">Search</button>
       </form>
       <div class="home__categories">
-        <button
-          mat-flat-button
-          color="accent"
-          (click)="_categoriesService.open()"
-        >
+        <button mat-flat-button color="accent" (click)="drawerService.open()">
           <mat-icon>view_list</mat-icon>
           Categories
         </button>
@@ -38,6 +29,20 @@
     </div>
   </div>
   <div class="container">
-    <app-paged-default-cards *ngFor="let section of sections" [title]="section.title" [items]="section.items"></app-paged-default-cards>
+    <ng-container *ngIf="!isSearch">
+      <app-paged-cards
+        *ngFor="let section of sections"
+        [categoryId]="section.id"
+        [title]="section.title"
+      ></app-paged-cards>
+    </ng-container>
+    <ng-container *ngIf="isSearch">
+      <app-paged-cards
+        title="Found items with requested parameters"
+        [onFilterChanged]="filterChanged"
+        [searchParams]="searchParams"
+        [pageSize]="searchPageSize"
+      ></app-paged-cards>
+    </ng-container>
   </div>
 </div>

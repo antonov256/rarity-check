@@ -1,8 +1,0 @@
-<div class="home__section">
-  <h2>{{ title }}</h2>
-  <div class="home__grid">
-    <app-card-own *ngFor="let item of actualItems" [ownItem]="item"></app-card-own>
-  </div>
-  <mat-paginator [length]="items.length" [pageSize]="4" (page)="onPageEvent($event)"></mat-paginator>
-</div>
-

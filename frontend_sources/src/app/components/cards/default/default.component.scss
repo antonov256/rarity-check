@@ -1,0 +1,8 @@
+.default-card {
+  height: 100%;
+
+  &__image {
+    height: 220px;
+    object-fit: cover;
+  }
+}

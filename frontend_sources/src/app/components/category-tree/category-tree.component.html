@@ -4,18 +4,28 @@
     <mat-expansion-panel *ngFor="let category of categories">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{ category.title }}
+          {{ category.name }}
         </mat-panel-title>
         <mat-panel-description>
           {{ category.description }}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-selection-list [multiple]="false">
-        <mat-list-option *ngFor="let item of category.items">
-          {{ item.title }}
-        </mat-list-option>
-      </mat-selection-list>
+
+      <div *ngFor="let subcategory of category.subcategories" class="subcategory">
+        <p>{{ subcategory.name }}</p>
+        <div class="subcategory__buttons">
+          <mat-icon color="warn" [routerLink]="'/subcategory/edit/' + subcategory.id">edit</mat-icon>
+          <mat-icon color="primary" [routerLink]="'/subcategory/' + subcategory.id">open_in_new</mat-icon>
+        </div>
+      </div>
+      <p *ngIf="!category.subcategories.length">There is no subcategories yet!</p>
+
+      <mat-action-row class="category-tree__actions" [routerLink]="'/category/edit/' + category.id">
+        <button mat-stroked-button color="warn"><mat-icon>edit</mat-icon> Edit category</button>
+        <button mat-flat-button color="primary" [routerLink]="'/category/' + category.id">
+          <mat-icon>open_in_new</mat-icon> Show items
+        </button>
+      </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-

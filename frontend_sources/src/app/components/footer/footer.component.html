@@ -1,35 +1,26 @@
 <footer class="footer">
   <div class="container">
     <div class="footer__menu">
-      <mat-list role="list">
-        <div mat-subheader>America and Commonwealth</div>
-        <mat-list-item role="listitem"> USA </mat-list-item>
-        <mat-list-item role="listitem">United Kingdom </mat-list-item>
-        <mat-list-item role="listitem">Mexico</mat-list-item>
-        <mat-list-item role="listitem">Canada</mat-list-item>
-        <mat-list-item role="listitem">
-          Caribbean, Central America
-        </mat-list-item>
-        <mat-list-item role="listitem"> South America </mat-list-item>
+      <mat-list role="list" *ngFor="let category of categoriesToShow">
+        <div mat-subheader>{{ category.title }}</div>
+        <a [href]="'/item/' + item.id" *ngFor="let item of category.items"
+          ><mat-list-item role="listitem">
+            {{ item.title }}
+          </mat-list-item></a
+        >
       </mat-list>
       <mat-list role="list">
-        <div mat-subheader>Europe</div>
-        <mat-list-item role="listitem">Item 1</mat-list-item>
-        <mat-list-item role="listitem">Item 2</mat-list-item>
-        <mat-list-item role="listitem">Item 3</mat-list-item>
-      </mat-list>
-      <mat-list role="list">
-        <div mat-subheader>World</div>
-        <mat-list-item role="listitem">Item 1</mat-list-item>
-        <mat-list-item role="listitem">Item 2</mat-list-item>
-        <mat-list-item role="listitem">Item 3</mat-list-item>
+        <div mat-subheader>Contacts</div>
+        <mat-list-item role="listitem">Email: rarity.check@bk.ua</mat-list-item>
+        <mat-list-item role="listitem">Phone: 8 800 555-35-35</mat-list-item>
+        <mat-list-item role="listitem">Address: 188805, Beijing, Lexington avenue, p. 9 3/4</mat-list-item>
       </mat-list>
     </div>
   </div>
   <mat-divider></mat-divider>
   <div class="container footer__bottom">
-    Copyright © 2001-2020 Lorem ipsum dolor sit amet consectetur, adipisicing
-    elit. Saepe libero hic ea enim eaque. <br />
+    Copyright © 2001-2020 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe libero hic ea enim eaque.
+    <br />
     Corporis perferendis minima hic aspernatur ut.
   </div>
 </footer>

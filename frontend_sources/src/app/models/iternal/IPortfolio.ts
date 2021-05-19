@@ -1,5 +1,5 @@
 export interface IPortfolio {
-  description: string,
-  ownList: '',
-  wishList: ''
+  description: string;
+  ownList: "";
+  wishList: "";
 }

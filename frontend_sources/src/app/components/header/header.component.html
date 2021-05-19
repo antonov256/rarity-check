@@ -1,7 +1,7 @@
 <header class="header">
   <mat-toolbar color="primary">
     <mat-toolbar-row class="header__row">
-      <span>COLLECTIBLE ITEMS</span>
+      <a class="header__logo" routerLink="/">COLLECTIBLE ITEMS</a>
       <div class="">
         <button
           mat-icon-button
@@ -12,29 +12,27 @@
           <mat-icon>perm_identity</mat-icon>
         </button>
         <mat-menu #userMenu="matMenu">
-          <ng-container *ngIf="authService.isAuthroized">
+          <ng-container *ngIf="sessionService.isAuthroized">
             <button mat-menu-item (click)="logOut()">Log out</button>
-            <button mat-menu-item routerLink="/profile">Profile</button>
-            <button mat-menu-item routerLink="/portfolio">Portfolio</button>
+            <ng-container *ngIf="!sessionService.isAdmin">
+              <button mat-menu-item routerLink="/profile">Profile</button>
+              <button mat-menu-item routerLink="/portfolio">Portfolio</button>
+            </ng-container>
+            <ng-container *ngIf="sessionService.isAdmin">
+              <button mat-menu-item routerLink="/admin">Admin panel</button>
+            </ng-container>
           </ng-container>
-          <ng-container *ngIf="!authService.isAuthroized" >
+          <ng-container *ngIf="!sessionService.isAuthroized">
             <button mat-menu-item routerLink="/auth">Log in</button>
           </ng-container>
         </mat-menu>
-        <button
-          mat-icon-button
-          aria-label="Example icon-button with menu icon"
-          [matMenuTriggerFor]="menu"
-        >
+        <button mat-icon-button aria-label="Example icon-button with menu icon" [matMenuTriggerFor]="menu">
           <mat-icon>menu</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item routerLink="/" routerLinkActive="active">Home</button>
-          <button mat-menu-item>Most viewed items</button>
-          <button mat-menu-item>Welcome</button>
-          <button mat-menu-item>Warranty</button>
-          <button mat-menu-item>Contact</button>
-          <button mat-menu-item>Help</button>
+          <button mat-menu-item routerLink="/about">About us</button>
+          <button mat-menu-item (click)="scrollTo()">Contact</button>
         </mat-menu>
       </div>
     </mat-toolbar-row>

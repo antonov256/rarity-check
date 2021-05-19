@@ -1,5 +1,15 @@
 <div class="container">
   <h1 class="portfolio__title">Portfolio</h1>
-  <app-paged-wish-cards [items]="wishItems" title="Wish List"></app-paged-wish-cards>
-  <app-paged-own-cards [items]="ownItems" title="Own List"></app-paged-own-cards>
+  <app-paged-cards
+    [items]="userStorageService.wishList"
+    type="wish"
+    title="Wish List"
+    *ngIf="userStorageService.wishList"
+  ></app-paged-cards>
+  <app-paged-cards
+    [items]="userStorageService.ownList"
+    type="own"
+    title="Own List"
+    *ngIf="userStorageService.ownList"
+  ></app-paged-cards>
 </div>

@@ -1,18 +1,15 @@
-<mat-card>
+<mat-card class="wish-card">
   <mat-card-header>
     <mat-card-title>{{ wishItem.item.title }}</mat-card-title>
   </mat-card-header>
-  <img
-    mat-card-image
-    [src]="wishItem.item.photos[0]"
-    alt="Wish item photo"
-  />
-  <mat-card-content>
+  <img mat-card-image class="wish-card__image" [src]="previewImage" alt="Wish item photo" />
+  <mat-card-content class="wish-card__content">
     <p>
       {{ wishItem.item.description }}
     </p>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-flat-button color="warn" mat-button (click)="deleteHandler()">Delete</button>
+  <mat-card-actions class="wish-card__actions">
+    <button mat-flat-button color="warn" mat-button (click)="confirmDeleteAction()">Delete</button>
+    <button mat-flat-button color="primary" mat-button [routerLink]="'/item/' + wishItem.item.id">Show</button>
   </mat-card-actions>
 </mat-card>

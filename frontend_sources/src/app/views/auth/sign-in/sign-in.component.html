@@ -1,18 +1,18 @@
 <mat-card class="auth__form">
   <form ngNativeValidate [formGroup]="form">
     <mat-card-title class="auth__subtitle">
-      Enter your E-mail and Password
+      Enter your Username and Password
     </mat-card-title>
     <mat-form-field appearance="outline" class="auth__input">
-      <mat-label>E-mail</mat-label>
+      <mat-label>Username</mat-label>
       <input
         matInput
         required
-        placeholder="test@example.com"
-        type="email"
-        formControlName="email"
+        placeholder="Username"
+        type="text"
+        formControlName="username"
       />
-      <mat-error *ngIf="form.controls['email'].invalid">{{getEmailErrorMessage()}}</mat-error>
+      <mat-error *ngIf="form.controls['username'].invalid">{{getUsernameErrorMessage()}}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" class="auth__input">
       <mat-label>Password</mat-label>

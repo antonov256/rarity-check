@@ -4,8 +4,13 @@
       Enter details below to Sign Up
     </mat-card-title>
     <mat-form-field appearance="outline" class="auth__input">
+      <mat-label>Username</mat-label>
+      <input matInput required placeholder="Enter your Username" formControlName="username"/>
+      <mat-error *ngIf="form.controls['username'].invalid">{{getUsernameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="auth__input">
       <mat-label>Full Name</mat-label>
-      <input matInput required placeholder="Enter your full name" formControlName="fullName"/>
+      <input matInput required placeholder="Enter your Name Surname" formControlName="fullName"/>
       <mat-error *ngIf="form.controls['fullName'].invalid">{{getFullNameErrorMessage()}}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" class="auth__input">
