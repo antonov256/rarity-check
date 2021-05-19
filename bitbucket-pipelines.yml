@@ -32,9 +32,9 @@ pipelines:
           caches:
             - gradle
           script:
-            - cd src/main/resources
+            - cd src/main/resources/static
             - ls -la
-            - cd ../../../
+            - cd ../../../../
             - gradle build
             - ls ./
             - ls -l ./build/libs/
