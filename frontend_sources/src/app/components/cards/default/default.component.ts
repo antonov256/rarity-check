@@ -11,7 +11,7 @@ export class DefaultCardComponent implements OnInit {
   @Input() item: IItem;
   descriptionLength = 115;
 
-  previewImage = "../../../assets/img/item-image-placeholder.png";
+  previewImage = "src/assets/img/item-image-placeholder.png";
 
   constructor() {}
 
