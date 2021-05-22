@@ -16,7 +16,7 @@ export class WishComponent implements OnInit {
 
   @Output() itemDeleted = new EventEmitter();
 
-  previewImage = "assets/img/item-image-placeholder.png";
+  previewImage = "assets/img/item_image_placeholder.png";
 
   constructor(
     private userStorageService: UserStorageService,
