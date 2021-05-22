@@ -3,10 +3,10 @@ package com.atriviss.raritycheck.service;
 import com.atriviss.raritycheck.dto_api.SubcategoryApiDto;
 import com.atriviss.raritycheck.dto_api.mapper.SubcategoryApiMapper;
 import com.atriviss.raritycheck.dto_api.to_create.SubcategoryToCreate;
-import com.atriviss.raritycheck.dto_jpa.pc_app.SubcategoryJpaDto;
-import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.SubcategoryJpaMapper;
+import com.atriviss.raritycheck.dto_jpa.rc_app.SubcategoryJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.mapper.SubcategoryJpaMapper;
 import com.atriviss.raritycheck.model.Subcategory;
-import com.atriviss.raritycheck.repository.SubcategoryRepository;
+import com.atriviss.raritycheck.repository.rc_app.SubcategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
