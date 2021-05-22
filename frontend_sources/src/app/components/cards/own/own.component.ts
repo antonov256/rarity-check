@@ -15,7 +15,7 @@ export class OwnComponent implements OnInit {
   @Input() ownItem: IOwnItem;
   @Output() itemDeleted = new EventEmitter();
 
-  previewImage = "src/assets/img/item-image-placeholder.png";
+  previewImage = "assets/img/item-image-placeholder.png";
 
   constructor(
     private userStorageService: UserStorageService,
