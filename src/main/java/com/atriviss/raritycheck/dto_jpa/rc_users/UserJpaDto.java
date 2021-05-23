@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 @Setter
 @EqualsAndHashCode
 @Entity
-@Table(name = "user", schema = "public", catalog = "rc_app")
+@Table(name = "user", schema = "public", catalog = "rc_users")
 public class UserJpaDto {
     private Integer id;
     private String username;
