@@ -54,7 +54,7 @@ public class CategoryService {
         return apiDtoList;
     }
 
-    @Transactional
+    @Transactional(transactionManager = "appTransactionManager")
     public CategoryApiDto create(CategoryToCreate toCreate) {
         CategoryJpaDto jpaDto = jpaMapper.toCategoryJpaDto(toCreate);
         CategoryJpaDto savedJpaDto = repository.save(jpaDto);

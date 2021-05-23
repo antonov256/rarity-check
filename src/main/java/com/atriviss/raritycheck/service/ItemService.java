@@ -118,7 +118,7 @@ public class ItemService {
         return apiDtoPage;
     }
 
-    @Transactional
+    @Transactional(transactionManager = "appTransactionManager")
     public ItemApiDto create(ItemToCreate itemToCreate) {
         ItemJpaDto jpaDto = jpaMapper.toItemJpaDto(apiMapper.toItem(itemToCreate));
 
@@ -171,7 +171,7 @@ public class ItemService {
                 });
     }
 
-    @Transactional
+    @Transactional(transactionManager = "appTransactionManager")
     public void deleteById(Integer id) {
         wishListService.deleteWishItemsByItemId(id);
         ownListService.deleteOwnItemsByItemId(id);

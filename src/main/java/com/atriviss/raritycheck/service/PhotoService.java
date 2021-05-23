@@ -58,7 +58,7 @@ public class PhotoService {
         return apiDto;
     }
 
-    @Transactional
+    @Transactional(transactionManager = "appTransactionManager")
     public List<PhotoApiDto> updatePhotos(Integer itemId, List<PhotoApiDto> photosToUpdate) {
         List<PhotoJpaDto> photosInDb = photoRepository.findAllByItemId(itemId);
 
