@@ -44,24 +44,6 @@ public class ItemService {
     private ClassificationJpaMapper classificationJpaMapper;
 
     @Autowired
-    private CategoryApiMapper categoryApiMapper;
-
-    @Autowired
-    private CategoryJpaMapper categoryJpaMapper;
-
-    @Autowired
-    private SubcategoryApiMapper subcategoryApiMapper;
-
-    @Autowired
-    private SubcategoryJpaMapper subcategoryJpaMapper;
-
-    @Autowired
-    private PhotoApiMapper photoApiMapper;
-
-    @Autowired
-    private PhotoJpaMapper photoJpaMapper;
-
-    @Autowired
     private VideoApiMapper videoApiMapper;
 
     @Autowired
@@ -74,13 +56,14 @@ public class ItemService {
     private WishListService wishListService;
     @Autowired
     private OwnListService ownListService;
-    
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public Optional<ItemApiDto> findById(Integer id) {
         Optional<ItemJpaDto> optionalJpaDto = repository.findById(id);
         return optionalJpaDto.map(jpaDto -> apiMapper.toItemApiDto(jpaMapper.toItem(jpaDto)));
     }
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public Page<ItemApiDto> findAll(Pageable pageable) {
         Page<ItemJpaDto> jpaDtoPage = repository.findAll(pageable);
         Page<ItemApiDto> apiDtoPage = jpaDtoPage.map(jpaMapper::toItem).map(apiMapper::toItemApiDto);
@@ -88,6 +71,7 @@ public class ItemService {
         return apiDtoPage;
     }
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public Page<ItemApiDto> findAllWithSearch(Pageable pageable, String searchQuery) {
         SpecificationsBuilder<ItemJpaDto> builder = new SpecificationsBuilder<>();
         List<String> codes = SearchOperation.codes();
@@ -111,6 +95,7 @@ public class ItemService {
         return apiDtoPage;
     }
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public Page<ItemApiDto> findAllByTitleContains(Pageable pageable, String titleFragment) {
         Page<ItemJpaDto> jpaDtoPage = repository.findByTitleContains(titleFragment, pageable);
         Page<ItemApiDto> apiDtoPage = jpaDtoPage.map(jpaMapper::toItem).map(apiMapper::toItemApiDto);
@@ -134,6 +119,7 @@ public class ItemService {
         return createdApiDto;
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public ItemApiDto replaceItem(Integer id, ItemApiDto newItemApiDto) {
         return repository.findById(id)
                 .map(jpaDto -> {

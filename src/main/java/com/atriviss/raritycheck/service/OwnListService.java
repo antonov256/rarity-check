@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class OwnListService {
     @Autowired
     private OwnListApiMapper wishListApiMapper;
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public OwnListApiDto ownListForUserId(Integer userId) {
         List<OwnItemJpaDto> jpaDtoList = ownItemRepository.findAllByUserId(userId);
         OwnList wishList = new OwnList(ownItemJpaMapper.toOwnItemList(jpaDtoList));
@@ -44,6 +46,7 @@ public class OwnListService {
         return wishListApiMapper.toOwnListApiDto(wishList);
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public OwnItemApiDto addOwnItem(OwnItemToAddToUser ownItemToAdd) {
         ItemJpaDto itemJpaDto = itemRepository.findById(ownItemToAdd.getItemId())
                 .orElseThrow(() -> new ResourceNotFoundException("item", ownItemToAdd.getItemId()));
@@ -59,6 +62,7 @@ public class OwnListService {
         }
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public void deleteOwnItemById(Integer userId, Integer ownItemId) {
         Optional<OwnItemJpaDto> optionalOwnItemJpaDto = ownItemRepository.findById(ownItemId);
         if(optionalOwnItemJpaDto.isPresent()) {

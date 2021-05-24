@@ -9,6 +9,7 @@ import com.atriviss.raritycheck.model.Subcategory;
 import com.atriviss.raritycheck.repository.rc_app.SubcategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class SubcategoryService {
         return savedApiDto;
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public SubcategoryApiDto replaceSubcategory(Integer id, SubcategoryApiDto newSubcategoryApiDto) {
         return repository.findById(id)
                 .map(jpaDto -> {

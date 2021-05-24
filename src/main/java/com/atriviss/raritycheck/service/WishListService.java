@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class WishListService {
     @Autowired
     private WishListApiMapper wishListApiMapper;
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public WishListApiDto wishListForUserId(Integer userId) {
         List<WishItemJpaDto> jpaDtoList = wishItemRepository.findAllByUserId(userId);
         WishList wishList = new WishList(wishItemJpaMapper.toWishItemList(jpaDtoList));
@@ -45,6 +47,7 @@ public class WishListService {
         return wishListApiMapper.toWishListApiDto(wishList);
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public WishItemApiDto addWishItem(WishItemToAddToUser wishItemToAddToUser) {
         ItemJpaDto itemJpaDto = itemRepository.findById(wishItemToAddToUser.getItemId())
                 .orElseThrow(() -> new ResourceNotFoundException(Item.class, wishItemToAddToUser.getItemId()));
@@ -60,6 +63,7 @@ public class WishListService {
         }
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public void deleteWishItemById(Integer userId, Integer wishItemId) {
         Optional<WishItemJpaDto> optionalWishItemJpaDto = wishItemRepository.findById(wishItemId);
         if(optionalWishItemJpaDto.isPresent()) {

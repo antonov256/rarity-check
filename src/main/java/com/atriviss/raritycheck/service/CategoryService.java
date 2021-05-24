@@ -31,11 +31,13 @@ public class CategoryService {
     @Autowired
     private SubcategoryService subcategoryService;
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public Optional<CategoryApiDto> findById(Integer id) {
         Optional<CategoryJpaDto> optionalJpaDto = repository.findById(id);
         return optionalJpaDto.map(jpaDto -> apiMapper.toCategoryApiDto(jpaMapper.toCategory(jpaDto)));
     }
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public List<CategoryApiDto> findAll(String filter) {
         List<CategoryJpaDto> jpaDtoList;
         if (filter == null) {
@@ -73,6 +75,7 @@ public class CategoryService {
         return savedApiDto;
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public CategoryApiDto replaceCategory(Integer id, CategoryApiDto newCategoryApiDto) {
         return repository.findById(id)
                 .map(jpaDto -> {
