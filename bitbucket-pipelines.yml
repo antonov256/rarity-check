@@ -51,4 +51,4 @@ pipelines:
                 ENVIRONMENT_NAME: "Raritycheck-env"
                 APPLICATION_NAME: "RarityCheck"
                 ZIP_FILE: "raritycheck.jar"
-                S3_BUCKET: 'raritycheck-dev'
+                S3_BUCKET: 'raritycheck'
