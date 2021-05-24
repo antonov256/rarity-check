@@ -5,10 +5,10 @@ import com.atriviss.raritycheck.dto_api.S3File;
 import com.atriviss.raritycheck.dto_api.mapper.PhotoApiMapper;
 import com.atriviss.raritycheck.dto_api.to_create.PhotoToAddToItem;
 import com.atriviss.raritycheck.dto_api.to_create.PhotoToCreate;
-import com.atriviss.raritycheck.dto_jpa.pc_app.PhotoJpaDto;
-import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.PhotoJpaMapper;
+import com.atriviss.raritycheck.dto_jpa.rc_app.PhotoJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.mapper.PhotoJpaMapper;
 import com.atriviss.raritycheck.model.Photo;
-import com.atriviss.raritycheck.repository.PhotoRepository;
+import com.atriviss.raritycheck.repository.rc_app.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +58,7 @@ public class PhotoService {
         return apiDto;
     }
 
-    @Transactional
+    @Transactional(transactionManager = "appTransactionManager")
     public List<PhotoApiDto> updatePhotos(Integer itemId, List<PhotoApiDto> photosToUpdate) {
         List<PhotoJpaDto> photosInDb = photoRepository.findAllByItemId(itemId);
 

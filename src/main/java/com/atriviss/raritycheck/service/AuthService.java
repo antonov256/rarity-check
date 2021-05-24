@@ -5,10 +5,12 @@ import com.atriviss.raritycheck.config.security.JwtTokenUtil;
 import com.atriviss.raritycheck.config.security.Token;
 import com.atriviss.raritycheck.controller_rest.exception.ResourceNotFoundException;
 import com.atriviss.raritycheck.dto_api.AuthorizationResponse;
-import com.atriviss.raritycheck.dto_api.rc_user.UserApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.UserLoginApiDto;
 import com.atriviss.raritycheck.dto_api.rc_user.mapper.UserApiMapper;
+import com.atriviss.raritycheck.dto_jpa.rc_users.UserJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_users.mapper.UserJpaMapper;
 import com.atriviss.raritycheck.model.User;
+import com.atriviss.raritycheck.repository.rc_users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +26,9 @@ import java.util.Optional;
 @Service
 public class AuthService {
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
+    @Autowired
+    private UserJpaMapper userJpaMapper;
     @Autowired
     private UserApiMapper userApiMapper;
     @Autowired
@@ -77,12 +81,12 @@ public class AuthService {
 
         Integer userId = jwtTokenUtil.getUserId(accessToken);
 
-        Optional<UserApiDto> userApiDtoOptional = userService.getUserById(userId);
-        if(userApiDtoOptional.isEmpty()) {
+        Optional<UserJpaDto> userJpaDtoOptional = userRepository.findById(userId);
+        if(userJpaDtoOptional.isEmpty()) {
             throw new ResourceNotFoundException(User.class, userId);
         }
 
-        User user = userApiMapper.toModel(userApiDtoOptional.get());
+        User user = userJpaMapper.toModel(userJpaDtoOptional.get());
         Token newAccessToken = jwtTokenUtil.generateAccessToken(user);
 
         HttpHeaders responseHeaders = new HttpHeaders();

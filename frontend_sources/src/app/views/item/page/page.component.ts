@@ -18,7 +18,7 @@ import { UserStorageService } from "src/app/services/user-storage.service";
 export class ItemPageComponent implements OnInit {
   itemId: number;
   itemData?: IItem;
-  previewImage = "assets/img/1986gold5libertyr.jpg";
+  previewImage = "assets/img/item_image_placeholder.png";
 
   inWishList = false;
   isWishDone = false;

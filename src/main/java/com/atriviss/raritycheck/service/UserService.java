@@ -43,7 +43,7 @@ public class UserService {
     @Value("${service.user.last-seen-update-threshold-in-seconds}")
     private Integer lastSeenUpdateThresholdInSeconds;
 
-    @Transactional
+    @Transactional(transactionManager = "usersTransactionManager")
     public UserApiDto register(UserRegisterApiDto userRegisterApiDto) throws UserAlreadyExistsException {
         if (repository.findByUsername(userRegisterApiDto.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException("Username '" + userRegisterApiDto.getUsername() + "' exists!");
@@ -80,7 +80,7 @@ public class UserService {
         return registeredUserApiDto;
     }
 
-    @Transactional
+    @Transactional(transactionManager = "usersTransactionManager")
     public void updateUserLastSeen(User user){
         Duration duration = Duration.between(user.getLastSeen(), OffsetDateTime.now());
         if(duration.getSeconds() > lastSeenUpdateThresholdInSeconds)
@@ -101,12 +101,12 @@ public class UserService {
         return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
-    @Transactional
+    @Transactional(transactionManager = "usersTransactionManager")
     public void updatePassword(User user, String newPassword) {
         repository.updatePassword(user.getId(), passwordEncoder.encode(newPassword));
     }
 
-    @Transactional
+    @Transactional(transactionManager = "usersTransactionManager")
     public UserApiDto updateProfile(User user, ChangeUserProfileApiDto changeUserProfileApiDto) {
         UserJpaDto userJpaDtoToUpdate = repository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("user", user.getId()));
 

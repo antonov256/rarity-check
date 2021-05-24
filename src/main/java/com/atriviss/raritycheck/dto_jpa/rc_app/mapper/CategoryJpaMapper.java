@@ -1,7 +1,7 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
+package com.atriviss.raritycheck.dto_jpa.rc_app.mapper;
 
 import com.atriviss.raritycheck.dto_api.to_create.CategoryToCreate;
-import com.atriviss.raritycheck.dto_jpa.pc_app.CategoryJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.CategoryJpaDto;
 import com.atriviss.raritycheck.model.Category;
 import org.mapstruct.Mapper;
 

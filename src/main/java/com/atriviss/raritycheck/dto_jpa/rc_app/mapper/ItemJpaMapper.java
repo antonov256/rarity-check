@@ -1,6 +1,6 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
+package com.atriviss.raritycheck.dto_jpa.rc_app.mapper;
 
-import com.atriviss.raritycheck.dto_jpa.pc_app.ItemJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.ItemJpaDto;
 import com.atriviss.raritycheck.model.Item;
 import com.atriviss.raritycheck.model.Photo;
 import com.atriviss.raritycheck.model.Video;

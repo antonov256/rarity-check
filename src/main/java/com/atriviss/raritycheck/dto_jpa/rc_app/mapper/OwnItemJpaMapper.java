@@ -1,7 +1,7 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
+package com.atriviss.raritycheck.dto_jpa.rc_app.mapper;
 
 import com.atriviss.raritycheck.dto_api.to_create.OwnItemToAddToUser;
-import com.atriviss.raritycheck.dto_jpa.pc_app.OwnItemJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.OwnItemJpaDto;
 import com.atriviss.raritycheck.model.OwnItem;
 import org.mapstruct.Mapper;
 

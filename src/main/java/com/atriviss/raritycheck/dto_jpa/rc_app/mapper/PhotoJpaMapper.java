@@ -1,7 +1,7 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
+package com.atriviss.raritycheck.dto_jpa.rc_app.mapper;
 
 import com.atriviss.raritycheck.dto_api.to_create.PhotoToCreate;
-import com.atriviss.raritycheck.dto_jpa.pc_app.PhotoJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.PhotoJpaDto;
 import com.atriviss.raritycheck.model.Photo;
 import org.mapstruct.Mapper;
 

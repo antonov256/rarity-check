@@ -1,8 +1,8 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
+package com.atriviss.raritycheck.dto_jpa.rc_app.mapper;
 
-import com.atriviss.raritycheck.dto_jpa.pc_app.CategoryJpaDto;
-import com.atriviss.raritycheck.dto_jpa.pc_app.ClassificationJpaDto;
-import com.atriviss.raritycheck.dto_jpa.pc_app.SubcategoryJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.CategoryJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.ClassificationJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.SubcategoryJpaDto;
 import com.atriviss.raritycheck.model.Classification;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

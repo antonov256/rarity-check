@@ -1,4 +1,4 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app;
+package com.atriviss.raritycheck.dto_jpa.rc_app;
 
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
@@ -6,10 +6,10 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "wish_item", schema = "public", catalog = "rc_app")
+@Table(name = "own_item", schema = "public", catalog = "rc_app")
 @Setter
 @EqualsAndHashCode
-public class WishItemJpaDto {
+public class OwnItemJpaDto {
     private Integer id;
     private Integer userId;
     private ItemJpaDto item;
@@ -21,15 +21,15 @@ public class WishItemJpaDto {
         return id;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false)
-    public ItemJpaDto getItem() {
-        return item;
-    }
-
     @Basic
     @Column(name = "user_id", nullable = false)
     public Integer getUserId() {
         return userId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false)
+    public ItemJpaDto getItem() {
+        return item;
     }
 }

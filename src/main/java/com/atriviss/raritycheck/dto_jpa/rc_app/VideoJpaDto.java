@@ -1,4 +1,4 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app;
+package com.atriviss.raritycheck.dto_jpa.rc_app;
 
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
@@ -6,10 +6,10 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "photo", schema = "public", catalog = "rc_app")
+@Table(name = "video", schema = "public", catalog = "rc_app")
 @Setter
 @EqualsAndHashCode
-public class PhotoJpaDto {
+public class VideoJpaDto {
     private Long id;
     private Integer itemId;
     private String bucketName;

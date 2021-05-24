@@ -5,11 +5,12 @@ import com.atriviss.raritycheck.dto_api.SubcategoryApiDto;
 import com.atriviss.raritycheck.dto_api.mapper.CategoryApiMapper;
 import com.atriviss.raritycheck.dto_api.to_create.CategoryToCreate;
 import com.atriviss.raritycheck.dto_api.to_create.SubcategoryToCreate;
-import com.atriviss.raritycheck.dto_jpa.pc_app.CategoryJpaDto;
-import com.atriviss.raritycheck.dto_jpa.pc_app.mapper.CategoryJpaMapper;
+import com.atriviss.raritycheck.dto_jpa.rc_app.CategoryJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.mapper.CategoryJpaMapper;
 import com.atriviss.raritycheck.model.Category;
-import com.atriviss.raritycheck.repository.CategoryRepository;
+import com.atriviss.raritycheck.repository.rc_app.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +32,13 @@ public class CategoryService {
     @Autowired
     private SubcategoryService subcategoryService;
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public Optional<CategoryApiDto> findById(Integer id) {
         Optional<CategoryJpaDto> optionalJpaDto = repository.findById(id);
         return optionalJpaDto.map(jpaDto -> apiMapper.toCategoryApiDto(jpaMapper.toCategory(jpaDto)));
     }
 
+    @Transactional(transactionManager = "appTransactionManager", readOnly = true)
     public List<CategoryApiDto> findAll(String filter) {
         List<CategoryJpaDto> jpaDtoList;
         if (filter == null) {
@@ -54,7 +57,7 @@ public class CategoryService {
         return apiDtoList;
     }
 
-    @Transactional
+    @Transactional(transactionManager = "appTransactionManager")
     public CategoryApiDto create(CategoryToCreate toCreate) {
         CategoryJpaDto jpaDto = jpaMapper.toCategoryJpaDto(toCreate);
         CategoryJpaDto savedJpaDto = repository.save(jpaDto);
@@ -73,6 +76,7 @@ public class CategoryService {
         return savedApiDto;
     }
 
+    @Transactional(transactionManager = "appTransactionManager")
     public CategoryApiDto replaceCategory(Integer id, CategoryApiDto newCategoryApiDto) {
         return repository.findById(id)
                 .map(jpaDto -> {
@@ -91,6 +95,10 @@ public class CategoryService {
     }
 
     public void deleteById(Integer id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("The category can’t be deleted. Provably there are subcategories or items in this category.");
+        }
     }
 }

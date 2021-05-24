@@ -1,6 +1,6 @@
-package com.atriviss.raritycheck.repository;
+package com.atriviss.raritycheck.repository.rc_app;
 
-import com.atriviss.raritycheck.dto_jpa.pc_app.ItemJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.ItemJpaDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,7 +1,7 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app.mapper;
+package com.atriviss.raritycheck.dto_jpa.rc_app.mapper;
 
 import com.atriviss.raritycheck.dto_api.to_create.WishItemToAddToUser;
-import com.atriviss.raritycheck.dto_jpa.pc_app.WishItemJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.WishItemJpaDto;
 import com.atriviss.raritycheck.model.WishItem;
 import org.mapstruct.Mapper;
 

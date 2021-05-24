@@ -1,4 +1,4 @@
-package com.atriviss.raritycheck.dto_jpa.pc_app;
+package com.atriviss.raritycheck.dto_jpa.rc_app;
 
 import lombok.EqualsAndHashCode;
 import lombok.Setter;

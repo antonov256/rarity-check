@@ -1,6 +1,6 @@
-package com.atriviss.raritycheck.repository;
+package com.atriviss.raritycheck.repository.rc_app;
 
-import com.atriviss.raritycheck.dto_jpa.pc_app.VideoJpaDto;
+import com.atriviss.raritycheck.dto_jpa.rc_app.VideoJpaDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
