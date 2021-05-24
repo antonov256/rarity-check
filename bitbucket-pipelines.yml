@@ -48,7 +48,7 @@ pipelines:
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: "eu-central-1"
                 COMMAND: 'all'
-                ENVIRONMENT_NAME: "Raritycheck-env"
+                ENVIRONMENT_NAME: "RC-Staging"
                 APPLICATION_NAME: "RarityCheck"
                 ZIP_FILE: "raritycheck.jar"
                 S3_BUCKET: 'raritycheck'
