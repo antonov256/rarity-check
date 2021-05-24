@@ -8,6 +8,7 @@ import com.atriviss.raritycheck.dto_jpa.rc_app.mapper.SubcategoryJpaMapper;
 import com.atriviss.raritycheck.model.Subcategory;
 import com.atriviss.raritycheck.repository.rc_app.SubcategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +67,10 @@ public class SubcategoryService {
     }
 
     public void deleteById(Integer id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("The subcategory can’t be deleted. Provably there are items in this subcategory.");
+        }
     }
 }
