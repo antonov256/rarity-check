@@ -29,3 +29,14 @@ Pagination supports sorting on multiple fields.
 Server response contains page metadata and navigation links following HATEOAS principle.  
 HAL pagination links: first, prev, self, next, last
 
+How to create admin: 
+1. Create regular user 
+2. Change user authorities in database: from "USER" to "USER,ADMIN" 
+3. Admin user is created 
+
+How images is uploaded:
+1. FilesRestController get MultipartFile from frontend
+2. FilesService calls S3Service
+3. S3Service uploads file into Amazon S3 storage and return bucketName and key of file
+4. Frontend adds photo with bucketName and key using PhotosRestController
+5. PhotosRestController save photo entity into database. Photo entity contains bucketName and key.
